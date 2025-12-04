@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Изменить расчетно-платежную ведомость</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/Styles.css">
+
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand">
+            <i class="bi bi-building me-2"></i>
+            ВОС
+            <span th:if="${selectedInstitution != null}"
+                  class="badge bg-light text-dark ms-2"
+                  th:text="${selectedInstitution.institutionAbbrev}">
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/home}"><i class="bi bi-house me-1"></i> Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}"><i class="bi bi-person-circle me-1"></i> Выход</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body>
+<div class="container-fluid mt-4">
+    <div class="text-center mb-4">
+        <h1 class="display-5">Расчетно-платежная ведомость</h1>
+    </div>
+
+    <form th:action="@{/payroll/payrollItems/create}" th:object="${payroll_items}" method="post">
+        <div class="mb-3 d-inline-flex align-items-center gap-2">
+            <label for="paymentDate" class="form-label mb-0">Дата выплаты:</label>
+            <input type="date" id="paymentDate" name="paymentDate" class="form-control date-input" style="width: 160px;" required>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table professional-theme">
+                <thead class="table-light">
+                <tr>
+                    <th rowspan="2" class="text-center fixed-col-small">№</th>
+                    <th rowspan="2" class="text-center fixed-col-name">ФИО</th>
+                    <th rowspan="2" class="text-center fixed-col-position">Должность</th>
+                    <th colspan="6" class="text-center table-success">Начисления</th>
+                    <th rowspan="2" class="text-center table-success calculated-cell">Всего начислено</th>
+                    <th colspan="3" class="text-center table-danger">Удержания</th>
+                    <th rowspan="2" class="text-center table-danger calculated-cell">Всего удержано</th>
+                    <th rowspan="2" class="text-center table-primary calculated-cell">К выдаче</th>
+                    <th rowspan="2" class="text-center fixed-col-name">Действия</th>
+                </tr>
+                <tr>
+                    <th class="text-center table-success">Оклад</th>
+                    <th class="text-center table-success">Премия</th>
+                    <th class="text-center table-success">ФСС</th>
+                    <th class="text-center table-success">Замещение</th>
+                    <th class="text-center table-success">Классное руководство</th>
+                    <th class="text-center table-danger">Прогулы</th>
+                    <th class="text-center table-danger">Проф взнос</th>
+                    <th class="text-center table-danger">НДФЛ</th>
+                    <th class="text-center table-danger">Аванс</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="payrollItem, stat : ${payroll_items}"
+                    th:data-nontaxable="${payrollItem.nonTaxable}"
+                    th:data-payment-data="${payrollItem.paymentDate}"
+                    th:data-employee-id="${payrollItem.employeeId}"
+                    th:data-payrollItem-id="${payrollItem.payrollItemId}">
+
+                    <td class="text-center fixed-col-small" th:text="${stat.index + 1}">1</td>
+                    <td class="fixed-col-name" th:text="${payrollItem.fullName()}"></td>
+                    <td class="fixed-col-name" th:text="${payrollItem.position}"></td>
+                    <td class="text-end calculated-cell fixed-col-position">
+                        <span th:text="${payrollItem.baseSalary}">0.00</span>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total bonus-input"
+                               name="bonus"
+                               th:value="${payrollItem.bonus ?: 0}"
+                               required>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total fss-input"
+                               name="fss"
+                               th:value="${payrollItem.fss ?: 0}"
+                               required>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total replace-input"
+                               name="replace"
+                               th:value="${payrollItem.replace ?: 0}"
+                               required>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total otherIncome-input"
+                               name="otherIncome"
+                               th:value="${payrollItem.otherIncome ?: 0}"
+                               required>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total absent-input"
+                               name="absent"
+                               th:value="${payrollItem.absent ?: 0}"
+                               required>
+                    </td>
+                    <td class="calculated-cell fixed-col-small total-income">
+                        <span>0.00</span>
+                    </td>
+                    <td class="calculated-cell fixed-col-small unionFee">
+                        <span>0.00</span>
+                    </td>
+                    <td class="calculated-cell fixed-col-small incomeTax">
+                        <span>0.00</span>
+                    </td>
+                    <td class="fixed-col-small">
+                        <input type="number"
+                               class="form-control form-control-sm table-input calculate-total advance-input"
+                               name="advance"
+                               th:value="${payrollItem.advance ?: 0}"
+                               required>
+                    </td>
+                    <td class="calculated-cell fixed-col-small total-deduction">
+                        <span>0.00</span>
+                    </td>
+                    <td class="calculated-cell fixed-col-small total-issued">
+                        <span>0.00</span>
+                    </td>
+                    <td class="text-center fixed-col-small">
+                        <button type="button" class="btn btn-danger"
+                                onclick="removeEmployee(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="3" class="text-start"><strong>ИТОГО:</strong></td>
+                    <td class="text-end" id="grand-total-salary">0.00</td>
+                    <td class="text-end" id="grand-total-bonus">0.00</td>
+                    <td class="text-end" id="grand-total-fss">0.00</td>
+                    <td class="text-end" id="grand-total-replace">0.00</td>
+                    <td class="text-end" id="grand-total-otherIncome">0.00</td>
+                    <td class="text-end" id="grand-total-absent">0.00</td>
+                    <td class="text-end calculated-cell" id="grand-total-income">0.00</td>
+                    <td class="text-end" id="grand-total-unionFee">0.00</td>
+                    <td class="text-end" id="grand-total-incomeTax">0.00</td>
+                    <td class="text-end" id="grand-total-advance">0.00</td>
+                    <td class="text-end calculated-cell" id="grand-total-deduction">0.00</td>
+                    <td class="text-end calculated-cell" id="grand-total-issued">0.00</td>
+                    <td class="text-end fixed-col-small"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex gap-3 justify-content-end mb-4">
+            <button type="submit" onclick="submitPayroll()" class="btn btn-submit text-white">
+                <i class="bi bi-floppy me-2"></i>Сохранить
+            </button>
+            <a th:href="@{/payroll}" class="btn btn-cancel text-white">
+                <i class="bi bi-x-circle me-2"></i>Отмена
+            </a>
+        </div>
+    </form>
+</div>
+<script src="/js/calculationsForEditPI.js"></script>
+<script src="/js/removeEmployee.js"></script>
+<script src="/js/apiServiceForEditPI.js"></script>
+<script src="/js/mainForEditPI.js"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+/* Общие переменные и сброс стилей */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #f39c12;
+    --light-color: #f8f9fa;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+}
+
+/* Базовые стили body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Стили для центрированных форм */
+body.form-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Контейнеры форм */
+.form-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Навигация */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовки страниц */
+.page-header {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 25px;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+    padding: 15px;
+    border-radius: 50%;
+    color: white;
+}
+
+.employees-card .card-icon {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.statements-card .card-icon {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.reports-card .card-icon {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.certificates-card .card-icon {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.card-text {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Кнопки */
+.btn-card {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    transition: background 0.3s;
+}
+
+.btn-card:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--success-color), #219653);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    color: white;
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #ff7f00, #ff5500);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-cancel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+    color: white;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 127, 0, 0.3);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff7f00, #ff5500);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 127, 0, 0.3);
+    color: white;
+}
+
+/* Формы */
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.required::after {
+    content: " *";
+    color: var(--danger-color);
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-right: none;
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+/* Бейджи и дополнительные элементы */
+.stats-badge {
+    background: rgba(52, 152, 219, 0.1);
+    color: var(--secondary-color);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.footer {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.quick-actions {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin: 5px;
+    transition: all 0.3s;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+}
+
+.action-btn:hover {
+    background: var(--light-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.action-btn i {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 8px;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    padding-left: 40px;
+    border-radius: 20px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #999;
+}
+
+/* Стили таблиц */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    vertical-align: middle;
+}
+
+.calculated-cell {
+    background-color: #e9ecef;
+    font-weight: bold;
+    text-align: end;
+    min-width: 90px;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.fixed-col-small {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.fixed-col-name {
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.fixed-col-position {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.total-row {
+    background-color: #f8f9fa !important;
+    font-weight: bold;
+}
+
+.professional-theme {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.professional-theme thead th {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 12px 8px;
+}
+
+.professional-theme tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.professional-theme tbody tr:hover {
+    background-color: #e3f2fd;
+}
+
+/* Стили для выбора периода */
+.period-selector {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.period-selector label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.pickers-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.picker-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.period-display {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c3e50;
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    min-width: 200px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.pickers-container .form-select,
+.pickers-container .date-input {
+    height: 38px;
+    box-sizing: border-box;
+}
+
+.payment-date-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.payment-date-item .form-label {
+    font-size: 0.9em;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.quick-periods {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quick-periods .btn {
+    font-size: 0.85em;
+    padding: 4px 8px;
+}

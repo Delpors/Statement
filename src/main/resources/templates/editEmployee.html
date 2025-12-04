@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Изменить сведения о сотруднике</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/Styles.css">
+</head>
+<body class="form-centered">
+<div class="form-container">
+    <div class="form-header">
+        <h2>
+            <i class="bi bi-person-gear"></i>
+            Изменить сведения о сотруднике
+        </h2>
+    </div>
+
+    <form th:action="@{/employees/update/{id}(id=${employee.employee_id})}" th:object="${employee}" method="post">
+        <input type="hidden" th:field="*{employee_id}" />
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label for="sername" class="form-label required">Фамилия</label>
+                <input type="text" class="form-control" id="sername" th:field="*{surName}" required
+                       placeholder="Иванов">
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="name" class="form-label required">Имя</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required
+                       placeholder="Иван">
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="lastname" class="form-label">Отчество</label>
+                <input type="text" class="form-control" id="lastname" th:field="*{lastname}"
+                       placeholder="Иванович">
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="position" class="form-label required">Должность</label>
+                <input type="text" class="form-control" id="position" th:field="*{position}" required
+                       placeholder="Менеджер">
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="salary" class="form-label required">Оклад</label>
+                <div class="input-group">
+                    <span class="input-group-text">₽</span>
+                    <input type="number" class="form-control" id="salary" th:field="*{salary}"
+                           placeholder="0.00" step="0.01" min="0" required>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <label for="nontaxable" class="form-label">Необлагаемая сумма</label>
+                <div class="input-group">
+                    <span class="input-group-text">₽</span>
+                    <input type="number" class="form-control" id="nontaxable" th:field="*{nonTaxable}"
+                           placeholder="0.00" step="0.01" min="0">
+                </div>
+            </div>
+
+            <div class="col-12 mb-4">
+                <label for="bankaccount" class="form-label">Расчетный счет</label>
+                <input type="text" class="form-control" id="bankaccount" th:field="*{bankAccount}"
+                       pattern="[0-9]{20}" placeholder="20 цифр номера счета">
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <label for="email" class="form-label required">@email</label>
+            <input type="text" class="form-control" id="email" th:field="*{email}"
+                   placeholder="Введите адрес электронной почты">
+        </div>
+        <div class="d-flex gap-3 justify-content-center">
+            <button type="submit" class="btn-submit text-white">
+                <i class="bi bi-floppy me-2"></i>Обновить
+            </button>
+            <a th:href="@{/employees}" class="btn btn-cancel text-white">
+                <i class="bi bi-x-circle me-2"></i>Отмена
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
