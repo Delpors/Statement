@@ -1,5 +1,6 @@
 package com.example.statement.controller;
 
+import com.example.statement.dto.request.PayrollItemsRequest;
 import com.example.statement.service.PayrollRequestParams;
 import com.example.statement.service.PayrollService;
 import com.example.statement.dto.respons.PayrollItemsResponse;
@@ -49,7 +50,7 @@ public class PayrollController {
     }
 
     @PostMapping("/payrollItems/create")
-    public String createPayrollItems(@RequestBody List<PayrollItemsResponse> payrollItemsDTOS,
+    public String createPayrollItems(@RequestBody List<PayrollItemsRequest> requests,
                                      HttpSession session){
 
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
@@ -57,9 +58,8 @@ public class PayrollController {
             throw new IllegalStateException("Организация не выбрана!");
         }
 
-        LocalDate payrollData = payrollItemsDTOS.getFirst().paymentDate();
-
-        payrollService.createOrUpdatePayroll(payrollData, payrollItemsDTOS, selectedInstId);
+        LocalDate payrollData = requests.getFirst().paymentDate();
+        payrollService.createOrUpdatePayroll(payrollData, requests, selectedInstId);
 
         return "redirect:/payroll?success";
     }

@@ -19,6 +19,9 @@ public class PeriodEntity {
     @OneToOne(mappedBy = "period")
     private PayrollEntity payroll = new PayrollEntity();
 
+    @OneToOne(mappedBy = "period")
+    private  PayrollItemsEntity payrollItems = new PayrollItemsEntity();
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -38,14 +41,4 @@ public class PeriodEntity {
         PAID,
         CLOSED
     }
-
-    public enum PeriodType{
-        CURRENT_MONTH,
-        PREVIOUS_MONTH,
-        SPECIFIC_MONTH,
-        CUSTOM,
-        QUARTER,
-        YEAR
-    }
-
 }

@@ -30,6 +30,10 @@ public class PayrollItemsEntity {
     @JoinColumn(name = "institution_Id")
     private InstitutionEntity institution;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "period_id")
+    private PeriodEntity period;
+
     //Начисление
 
     @Column(name = "base_Salary")//Премии

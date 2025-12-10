@@ -1,5 +1,7 @@
 package com.example.statement.dto.respons;
 
+import com.example.statement.entity.PayrollEntity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ public record PayrollItemsResponse(
          Long payrollItemId,
          Long employeeId,
          Long institutionId,
+         String periodInfo,
          String fullName,
          BigDecimal nonTaxable,
          String position,
@@ -25,5 +28,4 @@ public record PayrollItemsResponse(
          BigDecimal totalIssued,
          LocalDate paymentDate,
          LocalDateTime createdAt
- ) {
-}
+ ) {}

@@ -1,5 +1,7 @@
 package com.example.statement.service;
 
+import com.example.statement.dto.request.PayrollItemsRequest;
+import com.example.statement.dto.respons.DataToCreatePayroll;
 import com.example.statement.dto.respons.PayrollResponse;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.repository.PayrollRepository;
@@ -34,7 +36,7 @@ public class PayrollService {
         this.institutionService = institutionService;
     }
 
-    public List<PayrollItemsResponse> createPayrollItems(Long instId){
+    public List<DataToCreatePayroll> createPayrollItems(Long instId){
 
         return payrollItemsService.getAllPayrollItemsToCreate(instId);
     }
@@ -44,24 +46,24 @@ public class PayrollService {
     }
 
     public void createOrUpdatePayroll(LocalDate payrollData,
-                                      List<PayrollItemsResponse> itemsDTOS,
+                                      List<PayrollItemsRequest> requests,
                                       Long instId){
 
-        if (itemsDTOS==null || itemsDTOS.isEmpty()){
+        if (requests==null || requests.isEmpty()){
             throw new IllegalArgumentException("Ведомость не может быть пустой");
         }
 
         boolean isExist = payrollRepository.existsByPaymentDate(payrollData);
 
         if (isExist){
-            updatePayroll(payrollData, itemsDTOS, instId);
+            updatePayroll(payrollData, requests, instId);
         }else {
-            createPayroll(payrollData, itemsDTOS, instId);
+            createPayroll(payrollData, requests, instId);
         }
     }
 
     public void createPayroll(LocalDate payrollData,
-                              List<PayrollItemsResponse> payrollItemsDTOS,
+                              List<PayrollItemsRequest> requests,
                               Long instId) {
         PayrollEntity payroll = new PayrollEntity();
         InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
@@ -69,7 +71,7 @@ public class PayrollService {
         payroll.setPaymentDate(payrollData);
         payroll.setInstitution(institutionEntity);
 
-        List<PayrollItemsEntity> items = payrollItemsService.convertDTOtoEntity(payrollItemsDTOS, institutionEntity);
+        List<PayrollItemsEntity> items = payrollItemsService.convertDTOtoEntity(requests, institutionEntity);
         items.forEach(item->item.setPayroll(payroll));
 
         payroll.setItems(items);
@@ -79,7 +81,7 @@ public class PayrollService {
     }
 
     public void updatePayroll(LocalDate payrollData,
-                              List<PayrollItemsResponse> payrollItems,
+                              List<PayrollItemsRequest> requests,
                               Long instId) {
         InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
 
@@ -87,7 +89,7 @@ public class PayrollService {
                     .findByPaymentDate(payrollData)
                     .orElseThrow(()-> new RuntimeException("Ведомость не найдена"));
 
-        List<PayrollItemsEntity> newItems = payrollItemsService.convertDTOtoEntity(payrollItems, institutionEntity);
+        List<PayrollItemsEntity> newItems = payrollItemsService.convertDTOtoEntity(requests, institutionEntity);
 
         updatePayrollItems(payroll,newItems);
         payroll.calculateTotals();

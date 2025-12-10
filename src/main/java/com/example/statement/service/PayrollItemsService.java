@@ -1,5 +1,7 @@
 package com.example.statement.service;
 
+import com.example.statement.dto.request.PayrollItemsRequest;
+import com.example.statement.dto.respons.DataToCreatePayroll;
 import com.example.statement.dto.respons.PayrollItemsResponse;
 import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.entity.PayrollItemsEntity;
@@ -11,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class PayrollItemsService {
         return convertEntityToDTOtoEdit(payrollItemsByDate);
     }
 
-    public List<PayrollItemsResponse> getAllPayrollItemsToCreate(Long selectedInst) {
+    public List<DataToCreatePayroll> getAllPayrollItemsToCreate(Long selectedInst) {
 
         List<EmployeeEntity> employees = employeeService.getAllEmployeeEntities(selectedInst);
         return convertEmployeesToPayrollDTO(employees);
@@ -59,21 +60,14 @@ public class PayrollItemsService {
         existingEntity.setPaymentDate(newEntity.getPaymentDate());
     }
 
-    public List<PayrollItemsEntity> convertDTOtoEntity (List<PayrollItemsResponse> payrollItemsDTO,
+    public List<PayrollItemsEntity> convertDTOtoEntity (List<PayrollItemsRequest> requests,
                                                         InstitutionEntity institution){
 
-        return payrollItemsDTO.stream().map(
+        return requests.stream().map(
 
                 dto-> {
                     PayrollItemsEntity entity = new PayrollItemsEntity();
 
-                    if (dto.payrollItemId() != null) {
-                        entity.setPayrollItemId(dto.payrollItemId());
-                    }
-
-                    EmployeeEntity employee = employeeService.getEmployeeById(dto.employeeId());
-                    entity.setInstitution(institution);
-                    entity.setEmployee(employee);
                     entity.setBaseSalary(dto.baseSalary());
                     entity.setBonus(dto.bonus());
                     entity.setFss(dto.fss());
@@ -96,29 +90,16 @@ public class PayrollItemsService {
         payrollItemsRepository.deleteByPayrollItemId(payrollItemId);
     }
 
-    private List<PayrollItemsResponse> convertEmployeesToPayrollDTO(List<EmployeeEntity> employees) {
+    private List<DataToCreatePayroll> convertEmployeesToPayrollDTO(List<EmployeeEntity> employees) {
         return employees.stream()
-                .map(employee -> new PayrollItemsResponse(
-                        null, // payrollItemId - пока нет записи
+                .map(employee -> new DataToCreatePayroll(
                         employee.getEmployee_id(),
                         employee.getInstitution().getInstitutionId(),
                         employee.getSurName() + " " + employee.getName() + " " + employee.getLastname(),
                         employee.getNonTaxable(),
                         employee.getPosition(),
-                        employee.getSalary(), // если оклад хранится в employee
-                        BigDecimal.ZERO, // bonus - начальные значения
-                        BigDecimal.ZERO, // fss
-                        BigDecimal.ZERO, // replace
-                        BigDecimal.ZERO, // otherIncome
-                        BigDecimal.ZERO, // totalEmployeeIncome
-                        BigDecimal.ZERO, // absent
-                        BigDecimal.ZERO, // unionFee
-                        BigDecimal.ZERO, // incomeTax
-                        BigDecimal.ZERO, // advance
-                        BigDecimal.ZERO, // totalEmployeeDeduction
-                        BigDecimal.ZERO, // totalIssued
-                        null, // createdAt
-                        null // paymentData
+                        employee.getSalary()
+
                 ))
                 .collect(Collectors.toList());
     }
@@ -129,6 +110,7 @@ public class PayrollItemsService {
                         item.getPayrollItemId(),
                         item.getEmployee().getEmployee_id(),
                         item.getInstitution().getInstitutionId(),
+                        item.getPeriod().getPeriodId(),
                         item.getEmployee().getSurName() + " " + item.getEmployee().getName() + " " + item.getEmployee().getLastname(),
                         item.getEmployee().getNonTaxable(),
                         item.getEmployee().getPosition(),
