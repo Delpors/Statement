@@ -162,7 +162,5 @@ public class PeriodService {
 
             throw new IllegalArgumentException("В периоде не может быть больше 366 дней!");
         }
-
     }
-
 }

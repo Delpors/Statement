@@ -1,5 +1,7 @@
 package com.example.statement.repository;
 
+import com.example.statement.dto.request.InstitutionRequest;
+import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,11 +13,9 @@ import java.util.Optional;
 
 public interface PayrollRepository extends JpaRepository<PayrollEntity, Long> {
 
-    boolean existsByPaymentDate(LocalDate payrollData);
-
-    Optional<PayrollEntity> findByPaymentDate(LocalDate paymentData);
+    Optional<PayrollEntity> findByPaymentDateAndInstitution(LocalDate paymentDate, InstitutionEntity institution);
 
     @Query("SELECT e FROM PayrollEntity e WHERE e.institution.institutionId = :institutionId")
-    List<PayrollEntity> findAllByInstitutionId(@Param("institutionId") Long institutionId);
+    Optional<List<PayrollEntity>> findAllByInstitutionId(@Param("institutionId") Long institutionId);
 
 }

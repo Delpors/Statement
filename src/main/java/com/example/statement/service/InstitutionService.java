@@ -4,6 +4,7 @@ import com.example.statement.dto.request.InstitutionRequest;
 import com.example.statement.dto.respons.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.repository.InstitutionRepository;
+import com.example.statement.service.converter.InstitutionConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +20,12 @@ public class InstitutionService {
     }
 
     public void createInstitution(InstitutionRequest request) {
-        instRepository.save(convertSingleDTOtoEntity(null,request));
+        instRepository.save(new InstitutionConverter().toEntity(null,request));
     }
 
     public void updateInstitution(Long id, InstitutionRequest request) {
 
-        InstitutionEntity inst = convertSingleDTOtoEntity(id,request);
+        InstitutionEntity inst = new InstitutionConverter().toEntity(id,request);
 
         InstitutionEntity existInst = instRepository
                 .findById(id)
@@ -51,7 +52,7 @@ public class InstitutionService {
     public InstitutionEntity getInstitutionEntityById(Long id){
 
         InstitutionEntity institutionEntity = instRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException
+                .orElseThrow(()-> new NoSuchElementException
                         ("Организация с id" + id + "не найдена"));
 
         return institutionEntity;
@@ -62,45 +63,13 @@ public class InstitutionService {
                 .orElseThrow(()-> new RuntimeException
                         ("Организация с id" + id + "не найдена"));
 
-        return convertSingleEntityToDTO(institutionEntity);
+        return new InstitutionConverter().toSingleResponse(institutionEntity);
     }
 
     public List<InstitutionResponse> getAllInstitutions(){
 
         List<InstitutionEntity> existInstitutions = instRepository.findAll();
-        return convertEntityToDTO(existInstitutions);
-    }
-
-    public List<InstitutionResponse> convertEntityToDTO(List<InstitutionEntity> instEntity){
-        return instEntity
-                .stream()
-                .map(this::convertSingleEntityToDTO)
-                .toList();
-    }
-
-    public InstitutionResponse convertSingleEntityToDTO(InstitutionEntity instEntity){
-        return new InstitutionResponse(
-                instEntity.getInstitutionId(),
-                instEntity.getInstitutionFullName(),
-                instEntity.getInstitutionAbbrev(),
-                instEntity.getDirector(),
-                instEntity.getGeneralAccountant(),
-                instEntity.getAccountant()
-        );
-    }
-
-    public InstitutionEntity convertSingleDTOtoEntity(Long id, InstitutionRequest instDTO){
-        return new InstitutionEntity(
-                id,
-                null,
-                null,
-                null,
-                instDTO.institutionFullName(),
-                instDTO.institutionAbbrev(),
-                instDTO.director(),
-                instDTO.generalAccountant(),
-                instDTO.accountant()
-        );
+        return new InstitutionConverter().toResponse(existInstitutions);
     }
 
 }

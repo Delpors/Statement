@@ -1,8 +1,8 @@
 package com.example.statement.controller;
 
-import com.example.statement.dto.request.PayrollItemsRequest;
+import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.service.PayrollRequestParams;
-import com.example.statement.service.PayrollService;
+import com.example.statement.service.PayrollOrchestratorService;
 import com.example.statement.dto.respons.PayrollItemsResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
@@ -18,17 +18,17 @@ import java.util.List;
 @RequestMapping("/payroll")
 public class PayrollController {
 
-    PayrollService payrollService;
+    PayrollOrchestratorService payrollOrchestratorService;
 
-    public PayrollController(PayrollService payrollService){
-        this.payrollService = payrollService;
+    public PayrollController(PayrollOrchestratorService payrollOrchestratorService){
+        this.payrollOrchestratorService = payrollOrchestratorService;
     }
 
     @GetMapping
     public String showPayroll(Model model, HttpSession session) {
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 
-        model.addAttribute("payroll",payrollService.getAllPayrolls(selectedInstId));
+        model.addAttribute("payroll", payrollOrchestratorService.getAllPayrolls(selectedInstId));
 
         return "payroll";
     }
@@ -36,7 +36,7 @@ public class PayrollController {
     @GetMapping("/{payroll_id}")
     public String deletePayroll(@PathVariable Long payroll_id)
     {
-        payrollService.deletePayroll(payroll_id);
+        payrollOrchestratorService.deletePayroll(payroll_id);
         return "redirect:/payroll";
     }
     
@@ -44,13 +44,13 @@ public class PayrollController {
     public String showPayrollItemsCreateForm(Model model, HttpSession session) {
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 
-        model.addAttribute("items",payrollService.createPayrollItems(selectedInstId));
+        model.addAttribute("items", payrollOrchestratorService.getItemsToCreatePayroll(selectedInstId));
 
         return "createPayrollItems";
     }
 
     @PostMapping("/payrollItems/create")
-    public String createPayrollItems(@RequestBody List<PayrollItemsRequest> requests,
+    public String createPayrollItems(@RequestBody List<PayrollItemRequest> requests,
                                      HttpSession session){
 
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
@@ -59,7 +59,7 @@ public class PayrollController {
         }
 
         LocalDate payrollData = requests.getFirst().paymentDate();
-        payrollService.createOrUpdatePayroll(payrollData, requests, selectedInstId);
+        payrollOrchestratorService.createOrUpdatePayroll(payrollData, requests, selectedInstId);
 
         return "redirect:/payroll?success";
     }
@@ -94,7 +94,7 @@ public class PayrollController {
     public String deletePayrollItem(@PathVariable("id") Long payrollItemId,
                                     HttpSession session){
 
-        payrollService.deletePayrollItem(payrollItemId);
+        payrollOrchestratorService.deletePayrollItem(payrollItemId);
 
         LocalDate date = (LocalDate) session.getAttribute("currentPaymentDate");
         return "redirect:/payroll/payrollItems/edit/" + date;
@@ -111,7 +111,7 @@ public class PayrollController {
                                   HttpSession session, Pageable pageable){
 
         Long selectedInst = (Long) session.getAttribute("selectedInstId");
-        Page<PayrollItemsResponse> payrollPage = payrollService.
+        Page<PayrollItemsResponse> payrollPage = payrollOrchestratorService.
                 getPayrollItems(payrollId, selectedInst, pageable);
 
         model.addAttribute("payroll_items", payrollPage.getContent());

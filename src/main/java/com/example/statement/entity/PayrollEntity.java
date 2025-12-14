@@ -52,6 +52,8 @@ public class PayrollEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "updatedAt")
+    private LocalDateTime updatedAt;
 
     @Column(name = "payrollData")
     private LocalDate paymentDate;
@@ -62,12 +64,10 @@ public class PayrollEntity {
         calculateTotals();
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PeriodStatus status = PeriodStatus.DRAFT;
-
-    public enum PeriodStatus{
-        DRAFT, CALCULATED, PAID
+    @PreUpdate
+    protected void onUpdate(){
+        updatedAt = LocalDateTime.now();
+        calculateTotals();
     }
 
     public void calculateTotals(){

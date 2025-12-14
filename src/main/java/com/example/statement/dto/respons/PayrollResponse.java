@@ -15,7 +15,6 @@ public record PayrollResponse(
         BigDecimal totalAdvance,
         BigDecimal totalIssued,
         LocalDate payrollDate,
-        LocalDateTime createdAt,
-        String status
+        LocalDateTime createdAt
 ){
 }
