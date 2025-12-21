@@ -1,12 +1,31 @@
 function collectFormData() {
+    const monthSelect = document.getElementById('month');
+    const yearInput = document.getElementById('year');
     const paymentDateInput = document.getElementById('paymentDate');
 
-    if (!paymentDateInput) {
-        alert('Ошибка: не найден элемент выбора даты');
+    if (!monthSelect || !yearInput || !paymentDateInput) {
+        alert('Ошибка: не найдены элементы выбора периода и даты');
         return null;
     }
 
+    const month = monthSelect.value;
+    const year = yearInput.value;
     const paymentDate = paymentDateInput.value.trim();
+
+    console.log('Month value:', month, 'Type:', typeof month);
+    console.log('Year value:', year, 'Type:', typeof year);
+
+    if (!month || month === '' || month === '0') {
+        alert('Пожалуйста, выберите месяц');
+        monthSelect.focus();
+        return null;
+    }
+
+    if (!year || year.trim() === '') {
+        alert('Пожалуйста, укажите год');
+        yearInput.focus();
+        return null;
+    }
 
     if (!paymentDate) {
         alert('Пожалуйста, укажите дату выплаты');
@@ -14,7 +33,21 @@ function collectFormData() {
         return null;
     }
 
-    // Дополнительная валидация даты
+    const monthNumber = parseInt(month);
+    const yearNumber = parseInt(year);
+
+    if (isNaN(monthNumber) || monthNumber < 1 || monthNumber > 12) {
+        alert('Пожалуйста, выберите корректный месяц (1-12)');
+        monthSelect.focus();
+        return null;
+    }
+
+    if (isNaN(yearNumber) || yearNumber < 2025 || yearNumber > 2100) {
+        alert('Пожалуйста, укажите корректный год (2025-2100)');
+        yearInput.focus();
+        return null;
+    }
+
     const selectedDate = new Date(paymentDate);
     const today = new Date();
 
@@ -37,6 +70,7 @@ function collectFormData() {
 
     rows.forEach((row, index) => {
         const employeeId = row.getAttribute('data-employee-id');
+        const nonTaxableAmount = row.getAttribute('data-nontaxable') || 0;
 
         if (!employeeId) {
             alert(`Ошибка: у сотрудника в строке ${index + 1} не указан ID`);
@@ -45,8 +79,14 @@ function collectFormData() {
         }
 
         try {
+            const fullName = row.querySelector('.fixed-col-name').textContent.trim();
+            const position = row.querySelector('.fixed-col-position').textContent.trim();
+
             const data = {
-                employeeId: parseInt(employeeId),
+                employeeId: employeeId, // Добавляем employeeId
+                fullName: fullName,
+                nonTaxable: parseFloat(nonTaxableAmount) || 0,
+                position: position,
                 baseSalary: parseFloat(row.querySelector('.base-Salary span').textContent) || 0,
                 bonus: parseFloat(row.querySelector('.bonus-input').value) || 0,
                 fss: parseFloat(row.querySelector('.fss-input').value) || 0,
@@ -59,11 +99,13 @@ function collectFormData() {
                 advance: parseFloat(row.querySelector('.advance-input').value) || 0,
                 totalEmployeeDeduction: parseFloat(row.querySelector('.total-deduction span').textContent) || 0,
                 totalIssued: parseFloat(row.querySelector('.total-issued span').textContent) || 0,
+                month: monthNumber,
+                year: yearNumber,
                 paymentDate: paymentDate,
             };
 
-            if (isNaN(data.employeeId) || data.employeeId <= 0) {
-                throw new Error('Некорректный ID сотрудника');
+            if (!data.fullName) {
+                throw new Error('Не указано ФИО сотрудника');
             }
 
             formData.push(data);
@@ -102,27 +144,24 @@ function submitPayroll(event) {
         body: JSON.stringify(formData)
     })
         .then(response => {
-            if (response.ok) {
-                return response.json().catch(() => ({})); // Обрабатываем случаи когда ответ пустой
-            } else {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || `Ошибка сервера: ${response.status}`);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(`HTTP ${response.status}: ${text}`);
                 });
             }
+            return response.json();
         })
         .then(data => {
             console.log('Успешный ответ:', data);
-            window.location.href = '/payroll?success';
+            window.location.href = '/payroll?success=true';
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            alert(`Ошибка при сохранении: ${error.message}`);
-            window.location.href = '/payroll?error';
+            window.location.href = '/payroll?error=true';
         })
         .finally(() => {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         });
 }
-
 console.log('apiService.js loaded');

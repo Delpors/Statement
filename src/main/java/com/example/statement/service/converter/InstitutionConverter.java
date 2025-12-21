@@ -3,9 +3,11 @@ package com.example.statement.service.converter;
 import com.example.statement.dto.request.InstitutionRequest;
 import com.example.statement.dto.respons.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class InstitutionConverter {
 
     public InstitutionConverter(){

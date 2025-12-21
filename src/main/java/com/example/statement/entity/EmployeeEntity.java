@@ -20,7 +20,7 @@ public class EmployeeEntity {
     @Id
     @Column(name = "employee_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employee_id;
+    private Long employeeId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "institution_Id")

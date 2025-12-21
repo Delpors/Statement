@@ -3,8 +3,11 @@ package com.example.statement.service.converter;
 import com.example.statement.dto.respons.PayrollResponse;
 import com.example.statement.entity.PayrollEntity;
 
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 
 public class PayrollConverter {
@@ -28,13 +31,19 @@ public class PayrollConverter {
                     payroll.getTotalIncomeTax(),
                     payroll.getTotalAdvance(),
                     payroll.getTotalIssued(),
+                    getPeriodName(payroll.getMonth(), payroll.getYear()),
                     payroll.getPaymentDate(),
                     payroll.getCreatedAt()
             );
         } catch (Exception e) {
-            System.err.println("Ошибка конвертации сушности в DTO" + e.getMessage());
+            System.err.println("Ошибка конвертации сущности в DTO" + e.getMessage());
             return null;
         }
+    }
 
+    private String getPeriodName(Integer month, Integer year)
+    {
+        String monthName = Month.of(month).getDisplayName(TextStyle.FULL, new Locale("ru"));
+        return Character.toUpperCase(monthName.charAt(0)) + monthName.substring(1) + " " + year;
     }
 }

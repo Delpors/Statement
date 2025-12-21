@@ -18,7 +18,7 @@ public class EmployeeConverter {
     public List<DataToCreatePayroll> toCreatePayrollResponse(List<EmployeeEntity> employees) {
         return employees.stream()
                 .map(employee -> new DataToCreatePayroll(
-                        employee.getEmployee_id(),
+                        employee.getEmployeeId(),
                         employee.getInstitution().getInstitutionId(),
                         employee.getSurName() + " " + employee.getName() + " " + employee.getLastname(),
                         employee.getNonTaxable(),
@@ -64,7 +64,7 @@ public class EmployeeConverter {
     public EmployeeResponse toSingleResponse(EmployeeEntity employeeEntity){
         try {
             return new EmployeeResponse(
-                    employeeEntity.getEmployee_id(),
+                    employeeEntity.getEmployeeId(),
                     employeeEntity.getInstitution()!=null? employeeEntity.getInstitution().getInstitutionId():null,
                     employeeEntity.getName(),
                     employeeEntity.getSurName(),

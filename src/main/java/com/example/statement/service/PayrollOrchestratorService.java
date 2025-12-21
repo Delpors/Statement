@@ -4,6 +4,7 @@ import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.dto.respons.DataToCreatePayroll;
 import com.example.statement.dto.respons.PayrollItemsResponse;
 import com.example.statement.dto.respons.PayrollResponse;
+import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.service.manager.PayrollCommandService;
 import com.example.statement.service.query.PayrollQueryService;
 import jakarta.validation.constraints.Min;
@@ -24,13 +25,15 @@ public class PayrollOrchestratorService {
 
     private final PayrollCommandService payrollCommandService;
     private final PayrollQueryService payrollQueryService;
+    private final PayrollItemsRepository payrollItemsRepository;
 
     public PayrollOrchestratorService(PayrollCommandService payrollCommandService,
-                                      PayrollQueryService payrollQueryService
+                                      PayrollQueryService payrollQueryService, PayrollItemsRepository payrollItemsRepository
     ) {
 
         this.payrollCommandService = payrollCommandService;
         this.payrollQueryService = payrollQueryService;
+        this.payrollItemsRepository = payrollItemsRepository;
     }
 
     public void createOrUpdatePayroll(

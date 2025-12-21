@@ -17,5 +17,6 @@ public interface PayrollItemsRepository extends JpaRepository<PayrollItemsEntity
                                                         @Param("selectedInst") Long selectedInst,
                                                         Pageable pageable);
 
+
     void deleteByPayrollItemId(Long payrollItemId);
 }

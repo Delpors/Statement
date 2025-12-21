@@ -10,7 +10,6 @@ public record PayrollItemsResponse(
          Long payrollItemId,
          Long employeeId,
          Long institutionId,
-         String periodInfo,
          String fullName,
          BigDecimal nonTaxable,
          String position,
@@ -26,6 +25,8 @@ public record PayrollItemsResponse(
          BigDecimal advance ,
          BigDecimal totalEmployeeDeduction ,
          BigDecimal totalIssued,
+         Integer month,
+         Integer year,
          LocalDate paymentDate,
          LocalDateTime createdAt
  ) {}

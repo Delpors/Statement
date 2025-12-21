@@ -47,8 +47,8 @@
                 <tr>
                     <th class="text-center fixed-col-small">№</th>
                     <th class="text-center fixed-col-name">Период</th>
-                    <th class="text-center fixed-col-name">Начсислено</th>
-                    <th class="text-center fixed-col-name">Профсоюзный </br>взнос</th>
+                    <th class="text-center fixed-col-name">Начислено</th>
+                    <th class="text-center fixed-col-name">Профсоюзный</br>взнос</th>
                     <th class="text-center fixed-col-name">НДФЛ</th>
                     <th class="text-center fixed-col-name">Аванс</th>
                     <th class="text-center fixed-col-name">К выдаче</th>
@@ -64,7 +64,7 @@
                     class="payroll-row">
 
                     <td class="text-center fixed-col-small" th:text="${stat.index + 1}">1</td>
-                    <td class="text-center fixed-col-position" th:text="${payroll.payrollDate()}"></td>
+                    <td class="text-center fixed-col-position" th:text="${payroll.period()}"></td>
                     <td class="text-end fixed-col-position" th:text="${payroll.totalIncome()}"></td>
                     <td class="text-end fixed-col-position" th:text="${payroll.totalUnionFee()}"></td>
                     <td class="text-end fixed-col-position" th:text="${payroll.totalIncomeTax()}"></td>

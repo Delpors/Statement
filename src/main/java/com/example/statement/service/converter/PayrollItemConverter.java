@@ -3,8 +3,10 @@ package com.example.statement.service.converter;
 import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.dto.respons.InstitutionResponse;
 import com.example.statement.dto.respons.PayrollItemsResponse;
+import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollItemsEntity;
+import com.example.statement.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -14,15 +16,23 @@ import java.util.stream.Collectors;
 
 @Component
 public class PayrollItemConverter {
+    private final EmployeeRepository employeeRepository;
+
+    public PayrollItemConverter(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     public List<PayrollItemsEntity> toEntity (List<PayrollItemRequest> requests,
-                                                        InstitutionEntity institution){
+                                              InstitutionEntity institution){
 
         return requests.stream().map(
 
                 dto-> {
                     PayrollItemsEntity entity = new PayrollItemsEntity();
+                    EmployeeEntity employee = employeeRepository.findByEmployeeIdAndInstitution(dto.employeeId(), institution);
 
+                    entity.setEmployee(employee);
+                    entity.setInstitution(institution);
                     entity.setBaseSalary(dto.baseSalary());
                     entity.setBonus(dto.bonus());
                     entity.setFss(dto.fss());
@@ -35,6 +45,8 @@ public class PayrollItemConverter {
                     entity.setAdvance(dto.advance());
                     entity.setTotalEmployeeDeduction(dto.totalEmployeeDeduction());
                     entity.setTotalIssued(dto.totalIssued());
+                    entity.setMonth(dto.month());
+                    entity.setYear(dto.year());
                     entity.setPaymentDate(dto.paymentDate());
 
                     return entity;
@@ -46,9 +58,8 @@ public class PayrollItemConverter {
                 .stream()
                 .map(item -> new PayrollItemsResponse(
                         item.getPayrollItemId(),
-                        item.getEmployee().getEmployee_id(),
+                        item.getEmployee().getEmployeeId(),
                         item.getInstitution().getInstitutionId(),
-                        item.getPeriod().getPeriodId(),
                         item.getEmployee().getSurName() + " " + item.getEmployee().getName() + " " + item.getEmployee().getLastname(),
                         item.getEmployee().getNonTaxable(),
                         item.getEmployee().getPosition(),
@@ -64,6 +75,8 @@ public class PayrollItemConverter {
                         item.getAdvance(),
                         item.getTotalEmployeeDeduction(),
                         item.getTotalIssued(),
+                        item.getMonth(),
+                        item.getYear(),
                         item.getPaymentDate(),
                         item.getCreatedAt()
                 ))

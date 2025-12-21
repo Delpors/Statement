@@ -5,6 +5,7 @@ import com.example.statement.dto.respons.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.entity.PayrollItemsEntity;
+import com.example.statement.repository.EmployeeRepository;
 import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.repository.PayrollRepository;
@@ -28,17 +29,19 @@ public class PayrollCommandService {
     private final PayrollItemsRepository payrollItemsRepository;
     private final PayrollItemConverter payrollItemConverter;
     private final InstitutionRepository institutionRepository;
+    private final EmployeeRepository employeeRepository;
 
     public PayrollCommandService(
             PayrollRepository payrollRepository,
             PayrollItemsRepository payrollItemsRepository,
             PayrollItemConverter payrollItemConverter,
-            InstitutionRepository institutionRepository){
+            InstitutionRepository institutionRepository, EmployeeRepository employeeRepository){
 
         this.payrollRepository = payrollRepository;
         this.payrollItemsRepository = payrollItemsRepository;
         this.payrollItemConverter = payrollItemConverter;
         this.institutionRepository = institutionRepository;
+        this.employeeRepository = employeeRepository;
     }
     @Transactional
     public void createOrUpdatePayroll(
@@ -52,11 +55,12 @@ public class PayrollCommandService {
 
         List<PayrollItemsEntity> items = payrollItemConverter.toEntity(requests, institution);
 
+
         PayrollEntity payroll = payrollRepository
                 .findByPaymentDateAndInstitution(payrollDate, institution)
                 .orElseGet(()->createPayroll(payrollDate, items, institution));
 
-        updatePayrollItems(payroll, items);
+       /* updatePayrollItems(payroll, items);*/
         payrollRepository.save(payroll);
     }
 
@@ -64,10 +68,13 @@ public class PayrollCommandService {
     public PayrollEntity createPayroll(
             LocalDate payrollDate,
             List<PayrollItemsEntity> items,
-            InstitutionEntity institution) {
-
+            InstitutionEntity institution)
+    {
+        System.out.println("Создаем ведомость");
         PayrollEntity payroll = new PayrollEntity();
 
+        payroll.setMonth(items.getFirst().getMonth());
+        payroll.setYear(items.getFirst().getYear());
         payroll.setPaymentDate(payrollDate);
         payroll.setInstitution(institution);
 
@@ -83,7 +90,7 @@ public class PayrollCommandService {
             List<PayrollItemsEntity> newEntities) {
 
         Function<PayrollItemsEntity, String> keyFunc = entity ->
-                entity.getEmployee().getEmployee_id() + "_" + entity.getPaymentDate();
+                entity.getEmployee().getEmployeeId() + "_" + entity.getPaymentDate();
 
         Set<String> newKeys = newEntities.stream()
                 .map(keyFunc)

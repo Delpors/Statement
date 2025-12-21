@@ -1,12 +1,13 @@
 package com.example.statement.dto.request;
 
+import com.example.statement.entity.EmployeeEntity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record PayrollItemRequest(
-        String periodInfo,
-        String fullName,
+        Long employeeId,
         BigDecimal nonTaxable,
         String position,
         BigDecimal baseSalary,
@@ -21,6 +22,8 @@ public record PayrollItemRequest(
         BigDecimal advance ,
         BigDecimal totalEmployeeDeduction ,
         BigDecimal totalIssued,
+        Integer month,
+        Integer year,
         LocalDate paymentDate,
         LocalDateTime createdAt
 ) {

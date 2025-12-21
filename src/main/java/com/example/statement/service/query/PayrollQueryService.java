@@ -59,6 +59,7 @@ public class PayrollQueryService {
         List<PayrollEntity> payrollEntity = payrollRepository.findAllByInstitutionId(instId)
                 .orElseThrow(()-> new NoSuchElementException("Не найдена организация с Id"+ instId));
 
+
         return new PayrollConverter().toResponse(payrollEntity);
     }
 

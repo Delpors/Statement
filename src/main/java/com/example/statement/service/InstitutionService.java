@@ -14,9 +14,13 @@ import java.util.NoSuchElementException;
 public class InstitutionService {
 
     private final InstitutionRepository instRepository;
+    private final InstitutionConverter institutionConverter;
 
-    InstitutionService (InstitutionRepository instRepository){
+    InstitutionService (InstitutionRepository instRepository,
+                        InstitutionConverter institutionConverter)
+    {
         this.instRepository = instRepository;
+        this.institutionConverter = institutionConverter;
     }
 
     public void createInstitution(InstitutionRequest request) {
@@ -69,7 +73,7 @@ public class InstitutionService {
     public List<InstitutionResponse> getAllInstitutions(){
 
         List<InstitutionEntity> existInstitutions = instRepository.findAll();
-        return new InstitutionConverter().toResponse(existInstitutions);
+        return institutionConverter.toResponse(existInstitutions);
     }
 
 }

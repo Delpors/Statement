@@ -25,7 +25,8 @@ public class PayrollController {
     }
 
     @GetMapping
-    public String showPayroll(Model model, HttpSession session) {
+    public String showPayroll(Model model, HttpSession session)
+    {
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 
         model.addAttribute("payroll", payrollOrchestratorService.getAllPayrolls(selectedInstId));
@@ -41,7 +42,8 @@ public class PayrollController {
     }
     
     @GetMapping("/payrollItems/create")
-    public String showPayrollItemsCreateForm(Model model, HttpSession session) {
+    public String showPayrollItemsCreateForm(Model model, HttpSession session)
+    {
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 
         model.addAttribute("items", payrollOrchestratorService.getItemsToCreatePayroll(selectedInstId));
@@ -51,12 +53,15 @@ public class PayrollController {
 
     @PostMapping("/payrollItems/create")
     public String createPayrollItems(@RequestBody List<PayrollItemRequest> requests,
-                                     HttpSession session){
+                                     HttpSession session)
+    {
 
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
         if (selectedInstId==null){
             throw new IllegalStateException("Организация не выбрана!");
         }
+
+        System.out.println("Ведомость за период: "+ requests.getFirst().month() + " " + requests.getFirst().year());
 
         LocalDate payrollData = requests.getFirst().paymentDate();
         payrollOrchestratorService.createOrUpdatePayroll(payrollData, requests, selectedInstId);
@@ -92,7 +97,8 @@ public class PayrollController {
 
     @GetMapping("/payrollItems/delete/{id}")
     public String deletePayrollItem(@PathVariable("id") Long payrollItemId,
-                                    HttpSession session){
+                                    HttpSession session)
+    {
 
         payrollOrchestratorService.deletePayrollItem(payrollItemId);
 
@@ -101,14 +107,14 @@ public class PayrollController {
     }
 
     @GetMapping("/report/create")
-    public String showYearPayroll(Model model, HttpSession httpSession){
-
-
+    public String showYearPayroll(Model model, HttpSession httpSession)
+    {
         return "payrollYear";
     }
 
     private void setupPayrollData(Model model, Long payrollId,
-                                  HttpSession session, Pageable pageable){
+                                  HttpSession session, Pageable pageable)
+    {
 
         Long selectedInst = (Long) session.getAttribute("selectedInstId");
         Page<PayrollItemsResponse> payrollPage = payrollOrchestratorService.

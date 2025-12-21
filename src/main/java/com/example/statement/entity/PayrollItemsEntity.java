@@ -30,10 +30,6 @@ public class PayrollItemsEntity {
     @JoinColumn(name = "institution_Id")
     private InstitutionEntity institution;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "period_id")
-    private PeriodEntity period;
-
     //Начисление
 
     @Column(name = "base_Salary")//Премии
@@ -73,6 +69,12 @@ public class PayrollItemsEntity {
 
     @Column(name = "amount_issued")//Сумма к выдаче
     private BigDecimal totalIssued;
+
+    @Column(name = "month")
+    private Integer month;
+
+    @Column(name = "year")
+    private Integer year;
 
     @Column(name = "payment_data")
     private LocalDate  paymentDate;

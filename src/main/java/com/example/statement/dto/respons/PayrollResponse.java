@@ -14,7 +14,9 @@ public record PayrollResponse(
         BigDecimal totalIncomeTax,
         BigDecimal totalAdvance,
         BigDecimal totalIssued,
+        String period,
         LocalDate payrollDate,
         LocalDateTime createdAt
 ){
+
 }

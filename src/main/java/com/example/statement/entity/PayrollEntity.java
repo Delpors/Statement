@@ -30,10 +30,6 @@ public class PayrollEntity {
     @JoinColumn(name = "institution_Id")
     private InstitutionEntity institution;
 
-    @OneToOne
-    @JoinColumn(name = "periodId", nullable = false)
-    private PeriodEntity period;
-
     @Column(name = "totalIncome")
     private BigDecimal totalIncome;
 
@@ -48,6 +44,12 @@ public class PayrollEntity {
 
     @Column(name = "totalIssued")
     private BigDecimal totalIssued;
+
+    @Column(name = "month")
+    private Integer month;
+
+    @Column(name = "year")
+    private Integer year;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
