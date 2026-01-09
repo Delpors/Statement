@@ -57,10 +57,11 @@
         <tbody>
         <tr th:each="employee, stat : ${employees}">
             <td class="text-center" th:text="${stat.index + 1}">1</td>
-            <td th:text="${employee.surName}"></td>
+            <td th:text="${employee.surname}"></td>
             <td th:text="${employee.name}"></td>
             <td th:text="${employee.lastname}"></td>
-            <td class="text-center" th:text="${employee.position}"></td>
+
+            <td th:text="${employee.position}"></td>
             <td class="text-end" th:text="${employee.nonTaxable}"></td>
             <td class="text-end" th:text="${employee.salary}"></td>
             <td class="text-center" th:text="${employee.bankAccount}"></td>

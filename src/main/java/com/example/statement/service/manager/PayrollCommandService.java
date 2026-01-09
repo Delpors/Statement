@@ -1,7 +1,6 @@
 package com.example.statement.service.manager;
 
 import com.example.statement.dto.request.PayrollItemRequest;
-import com.example.statement.dto.respons.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.entity.PayrollItemsEntity;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -45,7 +45,6 @@ public class PayrollCommandService {
     }
     @Transactional
     public void createOrUpdatePayroll(
-            LocalDate payrollDate,
             List<PayrollItemRequest> requests,
             Long institutionId){
 
@@ -54,17 +53,23 @@ public class PayrollCommandService {
                 orElseThrow(()->new NoSuchElementException("Не найдена организация с id: " + institutionId));
 
         List<PayrollItemsEntity> items = payrollItemConverter.toEntity(requests, institution);
-
+        Integer month = requests.getFirst().month();
+        Integer year = requests.getFirst().year();
 
         PayrollEntity payroll = payrollRepository
-                .findByPaymentDateAndInstitution(payrollDate, institution)
-                .orElseGet(()->createPayroll(payrollDate, items, institution));
+                .findByMonthAndYearAndInstitution(month, year, institution)
+                .map(existingPayroll -> {
+                            updatePayrollItems(existingPayroll, items);
+                            existingPayroll.setUpdatedAt(LocalDateTime.MIN);
+                            return existingPayroll;
+                })
+                .orElseGet(()->{
+                    return createPayroll(requests.getFirst().paymentDate(), items, institution);
+                });
 
-       /* updatePayrollItems(payroll, items);*/
         payrollRepository.save(payroll);
     }
 
-    @Transactional
     public PayrollEntity createPayroll(
             LocalDate payrollDate,
             List<PayrollItemsEntity> items,
@@ -84,7 +89,6 @@ public class PayrollCommandService {
         return payroll;
     }
 
-    @Transactional
     public void updatePayrollItems(
             PayrollEntity payroll,
             List<PayrollItemsEntity> newEntities) {
@@ -120,7 +124,8 @@ public class PayrollCommandService {
 
     public void updateEntityFields (
             PayrollItemsEntity existingEntity,
-            PayrollItemsEntity newEntity) {
+            PayrollItemsEntity newEntity)
+    {
         existingEntity.setEmployee(newEntity.getEmployee());
         existingEntity.setBaseSalary(newEntity.getBaseSalary());
         existingEntity.setBonus(newEntity.getBonus());

@@ -15,6 +15,8 @@ public interface PayrollRepository extends JpaRepository<PayrollEntity, Long> {
 
     Optional<PayrollEntity> findByPaymentDateAndInstitution(LocalDate paymentDate, InstitutionEntity institution);
 
+    Optional<PayrollEntity> findByMonthAndYearAndInstitution(Integer month, Integer year, InstitutionEntity institution);
+
     @Query("SELECT e FROM PayrollEntity e WHERE e.institution.institutionId = :institutionId")
     Optional<List<PayrollEntity>> findAllByInstitutionId(@Param("institutionId") Long institutionId);
 

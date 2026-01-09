@@ -4,61 +4,252 @@
     <title>Сформировать ведомость</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/css/Styles.css">
+    <link rel="stylesheet" href="/css/TableStyles.css">
 </head>
+
 <body>
-<div class="container-fluid mt-4">
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand">
+            <i class="bi bi-building me-2"></i>
+            ВОС
+            <span th:if="${selectedInstitution != null}"
+                  class="badge bg-light text-dark ms-2"
+                  th:text="${selectedInstitution.institutionAbbrev}">
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/home}"><i class="bi bi-house me-1"></i> Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}"><i class="bi bi-person-circle me-1"></i> Выход</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:with="selectedYear=${param.year != null ? param.year[0] : 2025}" class="container-fluid mt-6">
     <div class="text-center mb-4">
-        <h1 class="display-5">Расчетно-платежная ведомость</h1>
+        <h1 class="display-5">Лицевые счета сотрудников учреждения</h1>
+        <h1 th:text="'За ' + ${selectedYear} + ' год'">За 2025 год</h1>
     </div>
 
-    <div th:if="${param.success}" class="alert alert-success">
-        Данные успешно сохранены!
-    </div>
-    <div th:if="${param.error}" class="alert alert-danger">
-        Ошибка при сохранении данных!
-    </div>
+    <form th:action="@{/report/year}" method="get" class="d-flex flex-wrap align-items-center gap-3 mb-4 p-3 bg-light rounded shadow-sm">
+        <div class="d-flex align-items-center gap-2 mb-0">
+            <label for="year" class="form-label fw-bold mb-0">Год:</label>
+            <input type="number"
+                   class="form-control"
+                   id="year"
+                   name="year"
+                   th:value="${selectedYear}"
+                   min="2024"
+                   max="2100"
+                   style="width: 120px;">
+        </div>
 
-    <form id="payrollForm">
-        <div class="table-responsive">
-            <table class="table professional-theme">
-                <thead class="table-light">
-                <tr>
-                    <th rowspan="2" class="text-center fixed-col-small">№</th>
-                    <th rowspan="2" class="text-center fixed-col-name">ФИО</th>
-
-                    <!-- Генерация месяцев через Thymeleaf -->
-                    <th th:each="month : ${#numbers.sequence(1, 12)}"
-                        th:colspan="3"
-                        th:class="'text-center table-success'"
-                        th:text="${T(java.time.Month).of(month).getDisplayName(
-                   T(java.time.format.TextStyle).FULL_STANDALONE,
-                   T(java.util.Locale).forLanguageTag('ru'))}">
-                    </th>
-
-                    <th rowspan="2" class="text-center fixed-col-name">Всего ЗП</th>
-                    <th rowspan="2" class="text-center fixed-col-name">Всего НДФЛ</th>
-                    <th rowspan="2" class="text-center fixed-col-name">Всего прфсоюз</th>
-                </tr>
-                <tr>
-                    <th th:each="i : ${#numbers.sequence(1, 36)}"
-                        th:class="'text-center table-success'"
-                        th:text="${(i % 3 == 1) ? 'ЗП' : ((i % 3 == 2) ? 'НДФЛ' : 'ПВ')}">
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="employee, stat : ${employees}"
-                    th:data-employee-id="${employee.employee_id}"
-                    th:data-salary="${employee.salary}"
-                    th:data-nontaxable="${employee.nonTaxable}">
-
-                    <td class="text-center fixed-col-small" th:text="${stat.index + 1}">1</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="d-flex align-items-center gap-2 mb-0">
+            <button type="submit" class="btn btn-primary" title="Заполнить таблицу">
+                <i class="bi bi-table"></i> Показать данные
+            </button>
+            <a href="/home" class="btn btn-outline-secondary ms-0">
+                <i class="bi bi-house"></i> На главную
+            </a>
         </div>
     </form>
+
+    <div class="table-container">
+        <table class="table table-bordered professional-theme">
+            <thead class="table-light">
+            <tr>
+                <th rowspan="2" class="text-center fixed-col-number fixed-col-header fw-bold">№</th>
+
+                <th rowspan="2" class="fixed-col-name fixed-col-header text-center">ФИО</th>
+
+                <th th:each="month : ${#numbers.sequence(1, 12)}"
+                    th:colspan="3"
+                    th:class="'text-center month-header'"
+                    th:scope="colgroup"
+                    th:text="${T(java.time.Month).of(month).getDisplayName(
+                       T(java.time.format.TextStyle).FULL_STANDALONE,
+                       T(java.util.Locale).forLanguageTag('ru'))}">
+                    Месяц
+                </th>
+
+                <th rowspan="2" class="text-center total-column" scope="col">Итого ЗП</th>
+                <th rowspan="2" class="text-center total-column" scope="col">Итого НДФЛ</th>
+                <th rowspan="2" class="text-center total-column" scope="col">Итого ПВ</th>
+            </tr>
+            <tr>
+                <th th:each="i : ${#numbers.sequence(1, 36)}"
+                    th:class="'text-center month-subheader'"
+                    th:scope="col">
+                    <span th:switch="${(i - 1) % 3}">
+                        <span th:case="0">ЗП</span>
+                        <span th:case="1">НДФЛ</span>
+                        <span th:case="2">ПВ</span>
+                    </span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="employee, stat : ${items}" th:class="${stat.odd} ? 'table-row-odd' : 'table-row-even'">
+                <td class="text-center fixed-col-number fw-bold">
+                    <span th:text="${(currentPage != null and pageSize != null) ?
+                                   stat.index + 1 + (currentPage * pageSize) :
+                                   stat.index + 1}"></span>
+                </td>
+
+                <td class="fixed-col-name" th:text="${employee.fullName}"></td>
+
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthKey=${selectedYear + '-' + (month lt 10 ? '0' + month : month)}">
+                        <td class="text-end number-cell month-column">
+                        <span th:text="${employee.monthlyData?.get(monthKey)?.salary != null ?
+                                #numbers.formatDecimal(employee.monthlyData.get(monthKey).salary, 1, 2) : '0.00'}">
+                        </span>
+                        </td>
+                        <td class="text-end number-cell month-column">
+                        <span th:text="${employee.getMonthlyData()?.get(monthKey)?.inkomTax != null ?
+                                #numbers.formatDecimal(employee.monthlyData.get(monthKey).inkomTax, 1, 2) : '0.00'}">
+                        </span>
+                        </td>
+                        <td class="text-end number-cell month-column">
+                        <span th:text="${employee.monthlyData?.get(monthKey)?.unionFee != null ?
+                                #numbers.formatDecimal(employee.monthlyData.get(monthKey).unionFee, 1, 2) : '0.00'}">
+                        </span>
+                        </td>
+                    </th:block>
+                </th:block>
+
+                <td class="text-end total-column number-cell">
+                    <span th:text="${employee.totalSalary != null ?
+                                   #numbers.formatDecimal(employee.totalSalary, 1, 2) :
+                                   '0.00'}"></span>
+                </td>
+                <td class="text-end total-column number-cell">
+                    <span th:text="${employee.totalTax != null ?
+                                   #numbers.formatDecimal(employee.totalTax, 1, 2) :
+                                   '0.00'}"></span>
+                </td>
+                <td class="text-end total-column number-cell">
+                    <span th:text="${employee.totalUnionFee != null ?
+                                   #numbers.formatDecimal(employee.totalUnionFee, 1, 2) :
+                                   '0.00'}"></span>
+                </td>
+            </tr>
+
+            <tr th:if="${items == null or items.isEmpty()}">
+                <td colspan="41" class="text-center py-5 text-muted">
+                    <i class="bi bi-table me-2"></i>
+                    Нет данных для отображения. Выберите год и нажмите "Показать данные".
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${totalPages != null and totalPages > 1}" class="d-flex justify-content-center mt-4">
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                    <a class="page-link"
+                       th:href="@{/report/year(year=${selectedYear}, page=${currentPage != null ? currentPage - 1 : 0})}"
+                       th:if="${currentPage != null and currentPage > 0}"
+                       aria-label="Предыдущая">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                    <span class="page-link disabled" th:unless="${currentPage != null and currentPage > 0}"
+                          aria-label="Предыдущая">
+                        <i class="bi bi-chevron-left"></i>
+                    </span>
+                </li>
+
+                <li class="page-item" th:if="${currentPage != null and currentPage > 2}">
+                    <a class="page-link" th:href="@{/report/year(year=${selectedYear}, page=0)}" th:text="1"></a>
+                </li>
+                <li class="page-item disabled" th:if="${currentPage != null and currentPage > 2}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <th:block th:if="${currentPage != null and totalPages != null}">
+                    <th:block th:with="startPage=${currentPage - 1 > 0 ? currentPage - 1 : 0},
+                                     endPage=${currentPage + 1 < totalPages - 1 ? currentPage + 1 : totalPages - 1}">
+                        <li th:each="page : ${#numbers.sequence(startPage, endPage)}"
+                            class="page-item"
+                            th:classappend="${page == currentPage} ? 'active' : ''"
+                            th:aria-current="${page == currentPage} ? 'page' : null">
+                            <a class="page-link"
+                               th:href="@{/report/year(year=${selectedYear}, page=${page})}"
+                               th:text="${page + 1}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+
+                <li class="page-item disabled"
+                    th:if="${currentPage != null and totalPages != null and currentPage < totalPages - 3}">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item"
+                    th:if="${currentPage != null and totalPages != null and currentPage < totalPages - 3}">
+                    <a class="page-link"
+                       th:href="@{/report/year(year=${selectedYear}, page=${totalPages - 1})}"
+                       th:text="${totalPages}"></a>
+                </li>
+
+                <li class="page-item"
+                    th:classappend="${currentPage != null and totalPages != null and currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a class="page-link"
+                       th:href="@{/report/year(year=${selectedYear}, page=${currentPage != null ? currentPage + 1 : 0})}"
+                       th:if="${currentPage != null and totalPages != null and currentPage < totalPages - 1}"
+                       aria-label="Следующая">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <span class="page-link disabled"
+                          th:unless="${currentPage != null and totalPages != null and currentPage < totalPages - 1}"
+                          aria-label="Следующая">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
+
+<script>
+    function updateTableHeight() {
+        const headerHeight = document.querySelector('.container-fluid').offsetTop;
+        const tableContainer = document.querySelector('.table-container');
+        if (tableContainer) {
+            const availableHeight = window.innerHeight - headerHeight - 200;
+            tableContainer.style.maxHeight = Math.max(400, availableHeight) + 'px';
+        }
+    }
+
+    window.addEventListener('load', updateTableHeight);
+    window.addEventListener('resize', updateTableHeight);
+
+    document.querySelector('form').addEventListener('submit', function() {
+        setTimeout(function() {
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({behavior: 'smooth'});
+            }
+        }, 100);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.querySelector('table');
+        if (table) {
+            table.classList.add('table-striped');
+        }
+    });
+</script>
 </body>
 </html>

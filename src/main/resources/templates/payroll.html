@@ -52,8 +52,9 @@
                     <th class="text-center fixed-col-name">НДФЛ</th>
                     <th class="text-center fixed-col-name">Аванс</th>
                     <th class="text-center fixed-col-name">К выдаче</th>
-                    <th class="text-center fixed-col-name">Дата выплаты</th>
-                    <th class="text-center fixed-col-name">Дата создания</th>
+                    <th class="text-center fixed-col-name">Дата</br>выплаты</th>
+                    <th class="text-center fixed-col-name">Дата</br>формирования</th>
+                    <th class="text-center fixed-col-name">Был</br>изменен</th>
                     <th class="text-center fixed-col-name">Действия</th>
 
                 </tr>
@@ -74,6 +75,9 @@
                     <td class="text-center fixed-col-position"
                         th:text="${#temporals.format(payroll.createdAt(), 'dd.MM.yyyy HH:mm')}">
                     </td>
+                    <td class="text-center fixed-col-position"
+                        th:text="${#temporals.format(payroll.updatedAt(), 'dd.MM.yyyy HH:mm')}">
+                    </td>
                     <td class="text-center">
                         <a th:href="@{/payroll/payrollItems/edit/{payrollId}(payrollId=${payroll.payrollId})}" class="btn btn-edit">
                             <i class="bi bi-pen"></i>
@@ -91,7 +95,7 @@
                     <td class="text-end" id="grand-total-incomeTax">0.00</td>
                     <td class="text-end" id="grand-total-advance">0.00</td>
                     <td class="text-end calculated-cell" id="grand-total-issued">0.00</td>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                 </tr>
                 </tbody>
             </table>

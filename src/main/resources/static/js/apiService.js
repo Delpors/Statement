@@ -12,9 +12,6 @@ function collectFormData() {
     const year = yearInput.value;
     const paymentDate = paymentDateInput.value.trim();
 
-    console.log('Month value:', month, 'Type:', typeof month);
-    console.log('Year value:', year, 'Type:', typeof year);
-
     if (!month || month === '' || month === '0') {
         alert('Пожалуйста, выберите месяц');
         monthSelect.focus();

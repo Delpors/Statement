@@ -5,8 +5,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/Styles.css">
-
 </head>
+<body>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand">
@@ -32,10 +32,15 @@
         </div>
     </div>
 </nav>
-<body>
+
 <div class="container-fluid mt-4">
+    <!-- Вариант 5: Заголовок с периодом на новой строке -->
     <div class="text-center mb-4">
         <h1 class="display-5">Расчетно-платежная ведомость</h1>
+        <div th:if="${not #lists.isEmpty(payroll_items) and payroll_items[0].period() != null}"
+             class="display-6"
+             th:text="${payroll_items[0].period()}">
+        </div>
     </div>
 
     <form id="payrollForm">
@@ -47,9 +52,9 @@
                     <th rowspan="2" class="text-center fixed-col-name">ФИО</th>
                     <th rowspan="2" class="text-center fixed-col-position">Должность</th>
                     <th colspan="5" class="text-center table-success">Начисления</th>
-                    <th rowspan="2" class="text-center table-success calculated-cell">Всего начислено</th>
+                    <th rowspan="2" class="text-center table-success calculated-cell">Всего</br>начислено</th>
                     <th colspan="4" class="text-center table-danger">Удержания</th>
-                    <th rowspan="2" class="text-center table-danger calculated-cell">Всего удержано</th>
+                    <th rowspan="2" class="text-center table-danger calculated-cell">Всего</br>удержано</th>
                     <th rowspan="2" class="text-center table-primary calculated-cell">К выдаче</th>
                 </tr>
                 <tr>
@@ -57,7 +62,7 @@
                     <th class="text-center table-success">Премия</th>
                     <th class="text-center table-success">ФСС</th>
                     <th class="text-center table-success">Замещение</th>
-                    <th class="text-center table-success">Классное руководство</th>
+                    <th class="text-center table-success">Классное</br>руководство</th>
 
                     <th class="text-center table-danger">Прогулы</th>
                     <th class="text-center table-danger">Проф взнос</th>
@@ -67,23 +72,21 @@
                 </thead>
                 <tbody>
                 <tr th:each="payrollItems, stat : ${payroll_items}">
-
                     <td class="text-center fixed-col-small" th:text="${stat.index + 1}">1</td>
                     <td class="fixed-col-name" th:text="${payrollItems.fullName()}"></td>
                     <td class="fixed-col-name" th:text="${payrollItems.position}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.baseSalary}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.bonus}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.fss}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.replace}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.otherIncome}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.totalEmployeeIncome}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.absent}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.unionFee}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.incomeTax}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.advance}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.totalEmployeeDeduction}"></td>
-                    <td class="text-end fixed-col-position" th:text="${payrollItems.totalIssued}"></td>
-
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.baseSalary, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.bonus, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.fss, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.replace, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.otherIncome, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end calculated-cell" th:text="${#numbers.formatDecimal(payrollItems.totalEmployeeIncome, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.absent, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.unionFee, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.incomeTax, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(payrollItems.advance, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end calculated-cell" th:text="${#numbers.formatDecimal(payrollItems.totalEmployeeDeduction, 1, 2, 'COMMA')}"></td>
+                    <td class="text-end calculated-cell" th:text="${#numbers.formatDecimal(payrollItems.totalIssued, 1, 2, 'COMMA')}"></td>
                 </tr>
                 <tr class="total-row">
                     <td colspan="3" class="text-start"><strong>ИТОГО:</strong></td>
@@ -110,6 +113,7 @@
         </div>
     </form>
 </div>
+
 <script>
     // Функция для расчета общих итогов
     function calculateGrandTotals() {
@@ -133,48 +137,44 @@
             // Получаем ячейки текущей строки
             const cells = row.querySelectorAll('td');
 
-            // Суммируем значения из каждой колонки
-            totalBaseSalary += parseFloat(cells[3].textContent) || 0;        // Оклад
-            totalBonus += parseFloat(cells[4].textContent) || 0;             // Премия
-            totalFss += parseFloat(cells[5].textContent) || 0;               // ФСС
-            totalReplace += parseFloat(cells[6].textContent) || 0;           // Замещение
-            totalOtherIncome += parseFloat(cells[7].textContent) || 0;       // Классное руководство
-            totalEmployeeIncome += parseFloat(cells[8].textContent) || 0;    // Всего начислено
-            totalAbsent += parseFloat(cells[9].textContent) || 0;            // Прогулы
-            totalUnionFee += parseFloat(cells[10].textContent) || 0;         // Проф взнос
-            totalIncomeTax += parseFloat(cells[11].textContent) || 0;        // НДФЛ
-            totalAdvance += parseFloat(cells[12].textContent) || 0;          // Аванс
-            totalEmployeeDeduction += parseFloat(cells[13].textContent) || 0;// Всего удержано
-            totalIssued += parseFloat(cells[14].textContent) || 0;           // К выдаче
+            // Преобразуем текст с учетом форматирования (заменяем запятые на точки)
+            totalBaseSalary += parseFloat(cells[3].textContent.replace(',', '.')) || 0;
+            totalBonus += parseFloat(cells[4].textContent.replace(',', '.')) || 0;
+            totalFss += parseFloat(cells[5].textContent.replace(',', '.')) || 0;
+            totalReplace += parseFloat(cells[6].textContent.replace(',', '.')) || 0;
+            totalOtherIncome += parseFloat(cells[7].textContent.replace(',', '.')) || 0;
+            totalEmployeeIncome += parseFloat(cells[8].textContent.replace(',', '.')) || 0;
+            totalAbsent += parseFloat(cells[9].textContent.replace(',', '.')) || 0;
+            totalUnionFee += parseFloat(cells[10].textContent.replace(',', '.')) || 0;
+            totalIncomeTax += parseFloat(cells[11].textContent.replace(',', '.')) || 0;
+            totalAdvance += parseFloat(cells[12].textContent.replace(',', '.')) || 0;
+            totalEmployeeDeduction += parseFloat(cells[13].textContent.replace(',', '.')) || 0;
+            totalIssued += parseFloat(cells[14].textContent.replace(',', '.')) || 0;
         });
 
+        // Функция для форматирования числа с двумя десятичными знаками
+        function formatNumber(num) {
+            return num.toFixed(2).replace('.', ',');
+        }
+
         // Обновляем итоговую строку
-        document.getElementById('grand-total-salary').textContent = totalBaseSalary.toFixed(2);
-        document.getElementById('grand-total-bonus').textContent = totalBonus.toFixed(2);
-        document.getElementById('grand-total-fss').textContent = totalFss.toFixed(2);
-        document.getElementById('grand-total-replace').textContent = totalReplace.toFixed(2);
-        document.getElementById('grand-total-otherIncome').textContent = totalOtherIncome.toFixed(2);
-        document.getElementById('grand-total-income').textContent = totalEmployeeIncome.toFixed(2);
-        document.getElementById('grand-total-absent').textContent = totalAbsent.toFixed(2);
-        document.getElementById('grand-total-unionFee').textContent = totalUnionFee.toFixed(2);
-        document.getElementById('grand-total-incomeTax').textContent = totalIncomeTax.toFixed(2);
-        document.getElementById('grand-total-advance').textContent = totalAdvance.toFixed(2);
-        document.getElementById('grand-total-deduction').textContent = totalEmployeeDeduction.toFixed(2);
-        document.getElementById('grand-total-issued').textContent = totalIssued.toFixed(2);
+        document.getElementById('grand-total-salary').textContent = formatNumber(totalBaseSalary);
+        document.getElementById('grand-total-bonus').textContent = formatNumber(totalBonus);
+        document.getElementById('grand-total-fss').textContent = formatNumber(totalFss);
+        document.getElementById('grand-total-replace').textContent = formatNumber(totalReplace);
+        document.getElementById('grand-total-otherIncome').textContent = formatNumber(totalOtherIncome);
+        document.getElementById('grand-total-income').textContent = formatNumber(totalEmployeeIncome);
+        document.getElementById('grand-total-absent').textContent = formatNumber(totalAbsent);
+        document.getElementById('grand-total-unionFee').textContent = formatNumber(totalUnionFee);
+        document.getElementById('grand-total-incomeTax').textContent = formatNumber(totalIncomeTax);
+        document.getElementById('grand-total-advance').textContent = formatNumber(totalAdvance);
+        document.getElementById('grand-total-deduction').textContent = formatNumber(totalEmployeeDeduction);
+        document.getElementById('grand-total-issued').textContent = formatNumber(totalIssued);
     }
-
-    // Функция для форматирования чисел (если нужно)
-    function formatNumber(value) {
-        return parseFloat(value).toFixed(2);
-    }
-
 
     // Автоматический расчет при загрузке страницы
     document.addEventListener('DOMContentLoaded', function() {
-
-        // Выполняем первоначальный расчет
         calculateGrandTotals();
-
         console.log('Итоги рассчитаны автоматически');
     });
 </script>

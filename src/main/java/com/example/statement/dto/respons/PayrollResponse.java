@@ -16,7 +16,8 @@ public record PayrollResponse(
         BigDecimal totalIssued,
         String period,
         LocalDate payrollDate,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ){
 
 }

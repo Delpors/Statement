@@ -1,7 +1,7 @@
 package com.example.statement.controller;
 
 import com.example.statement.dto.request.PayrollItemRequest;
-import com.example.statement.service.PayrollRequestParams;
+import com.example.statement.dto.request.PayrollPageableParams;
 import com.example.statement.service.PayrollOrchestratorService;
 import com.example.statement.dto.respons.PayrollItemsResponse;
 import jakarta.servlet.http.HttpSession;
@@ -55,24 +55,21 @@ public class PayrollController {
     public String createPayrollItems(@RequestBody List<PayrollItemRequest> requests,
                                      HttpSession session)
     {
-
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
         if (selectedInstId==null){
             throw new IllegalStateException("Организация не выбрана!");
         }
 
-        System.out.println("Ведомость за период: "+ requests.getFirst().month() + " " + requests.getFirst().year());
+        System.out.println("Платежная ведомость за " + requests.getFirst().month());
 
-        LocalDate payrollData = requests.getFirst().paymentDate();
-        payrollOrchestratorService.createOrUpdatePayroll(payrollData, requests, selectedInstId);
-
+        payrollOrchestratorService.createOrUpdatePayroll(requests, selectedInstId);
         return "redirect:/payroll?success";
     }
 
     @GetMapping("/payrollItems/{payrollId}")
     public String showPayrollItems(
             @PathVariable Long payrollId,
-            @ModelAttribute PayrollRequestParams params,
+            @ModelAttribute PayrollPageableParams params,
             Model model, HttpSession session)
     {
 
@@ -85,10 +82,9 @@ public class PayrollController {
     @GetMapping("/payrollItems/edit/{payrollId}")
     public String showPayrollItemsEditForm(
             @PathVariable Long payrollId,
-            @ModelAttribute PayrollRequestParams params,
+            @ModelAttribute PayrollPageableParams params,
             Model model, HttpSession session)
     {
-
 
         Pageable pageable = params.getPageable();
         setupPayrollData(model, payrollId, session, pageable);
@@ -106,12 +102,6 @@ public class PayrollController {
         return "redirect:/payroll/payrollItems/edit/" + date;
     }
 
-    @GetMapping("/report/create")
-    public String showYearPayroll(Model model, HttpSession httpSession)
-    {
-        return "payrollYear";
-    }
-
     private void setupPayrollData(Model model, Long payrollId,
                                   HttpSession session, Pageable pageable)
     {
@@ -127,13 +117,13 @@ public class PayrollController {
     }
 
     @ModelAttribute("params")
-    public PayrollRequestParams setupParams(
+    public PayrollPageableParams setupParams(
             @RequestParam(defaultValue = "totalIssued") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "50") Integer size
     ){
-        PayrollRequestParams params = new PayrollRequestParams();
+        PayrollPageableParams params = new PayrollPageableParams();
 
         params.setSortBy(sortBy);
         params.setDirection(direction);

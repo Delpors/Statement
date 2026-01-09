@@ -52,7 +52,6 @@ public class PayrollItemConverter {
                     return entity;
                 }).toList();
     }
-
     public Page<PayrollItemsResponse> toResponse(Page<PayrollItemsEntity> payrollItemsEntities) {
         List<PayrollItemsResponse> dtos = payrollItemsEntities
                 .stream()
@@ -60,7 +59,7 @@ public class PayrollItemConverter {
                         item.getPayrollItemId(),
                         item.getEmployee().getEmployeeId(),
                         item.getInstitution().getInstitutionId(),
-                        item.getEmployee().getSurName() + " " + item.getEmployee().getName() + " " + item.getEmployee().getLastname(),
+                        item.getEmployee().fullName(),
                         item.getEmployee().getNonTaxable(),
                         item.getEmployee().getPosition(),
                         item.getEmployee().getSalary(),
@@ -75,6 +74,7 @@ public class PayrollItemConverter {
                         item.getAdvance(),
                         item.getTotalEmployeeDeduction(),
                         item.getTotalIssued(),
+                        DateFormatterUtil.getPeriodName(item.getMonth(), item.getYear()),
                         item.getMonth(),
                         item.getYear(),
                         item.getPaymentDate(),

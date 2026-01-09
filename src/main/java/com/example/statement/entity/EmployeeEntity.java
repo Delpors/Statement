@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Table(name = "employees")
 @Entity
@@ -68,6 +71,14 @@ public class EmployeeEntity {
     public void softDelete(){
         this.active = false;
         this.deletedAt = LocalDate.now();
+    }
+
+    public String fullName()
+    {
+        return Stream.of(surName, name, lastname)
+                .filter(Objects::nonNull)
+                .filter(s->!s.isBlank())
+                .collect(Collectors.joining(" "));
     }
 
 }

@@ -21,7 +21,7 @@ public class PayrollEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payrollid;
+    private Long payrollId;
 
     @OneToMany(mappedBy = "payroll", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PayrollItemsEntity> items = new ArrayList<>();
@@ -62,12 +62,14 @@ public class PayrollEntity {
 
     @PrePersist
     protected void onCreate(){
+        System.out.println("Обновление общих сумм при создании");
         createdAt = LocalDateTime.now();
         calculateTotals();
     }
 
     @PreUpdate
     protected void onUpdate(){
+        System.out.println("Обновление общих сумм при обновлении");
         updatedAt = LocalDateTime.now();
         calculateTotals();
     }

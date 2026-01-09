@@ -25,6 +25,7 @@ public record PayrollItemsResponse(
          BigDecimal advance ,
          BigDecimal totalEmployeeDeduction ,
          BigDecimal totalIssued,
+         String period,
          Integer month,
          Integer year,
          LocalDate paymentDate,

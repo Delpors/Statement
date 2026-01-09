@@ -1,9 +1,7 @@
 package com.example.statement.service;
 
 import com.example.statement.dto.request.PayrollItemRequest;
-import com.example.statement.dto.respons.DataToCreatePayroll;
-import com.example.statement.dto.respons.PayrollItemsResponse;
-import com.example.statement.dto.respons.PayrollResponse;
+import com.example.statement.dto.respons.*;
 import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.service.manager.PayrollCommandService;
 import com.example.statement.service.query.PayrollQueryService;
@@ -17,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -25,7 +24,6 @@ public class PayrollOrchestratorService {
 
     private final PayrollCommandService payrollCommandService;
     private final PayrollQueryService payrollQueryService;
-    private final PayrollItemsRepository payrollItemsRepository;
 
     public PayrollOrchestratorService(PayrollCommandService payrollCommandService,
                                       PayrollQueryService payrollQueryService, PayrollItemsRepository payrollItemsRepository
@@ -33,13 +31,9 @@ public class PayrollOrchestratorService {
 
         this.payrollCommandService = payrollCommandService;
         this.payrollQueryService = payrollQueryService;
-        this.payrollItemsRepository = payrollItemsRepository;
     }
 
     public void createOrUpdatePayroll(
-            @NotNull (message = "Дата ведомости обязательна")
-            LocalDate payrollDate,
-
             @NotEmpty (message = "Ведомость не может быть пустым")
             List<PayrollItemRequest> requests,
 
@@ -47,7 +41,7 @@ public class PayrollOrchestratorService {
             @Min(value = 1, message = "Id учреждения должен быть положительным")
             Long institutionId)
     {
-        payrollCommandService.createOrUpdatePayroll(payrollDate, requests, institutionId);
+        payrollCommandService.createOrUpdatePayroll(requests, institutionId);
     }
 
     public List<DataToCreatePayroll> getItemsToCreatePayroll(
@@ -71,7 +65,6 @@ public class PayrollOrchestratorService {
             Long payrollId,
             @NotNull
             Long selectedInst,
-            @NotEmpty
             Pageable pageable)
     {
         return payrollQueryService.getPayrollItems(payrollId, selectedInst, pageable);
@@ -89,5 +82,10 @@ public class PayrollOrchestratorService {
             Long payrollItemId)
     {
         payrollCommandService.deletePayrollItem(payrollItemId);
+    }
+
+    public Page<PayrollSummaryResponse> getEmployeesSalary(Integer year, Long institutionId, Pageable pageable)
+    {
+        return payrollQueryService.getEmployeesYearSalary(year, institutionId, pageable);
     }
 }

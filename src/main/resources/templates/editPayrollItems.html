@@ -37,14 +37,11 @@
 <div class="container-fluid mt-4">
     <div class="text-center mb-4">
         <h1 class="display-5">Расчетно-платежная ведомость</h1>
-    </div>
-
-    <form th:action="@{/payroll/payrollItems/create}" th:object="${payroll_items}" method="post">
-        <div class="mb-3 d-inline-flex align-items-center gap-2">
-            <label for="paymentDate" class="form-label mb-0">Дата выплаты:</label>
-            <input type="date" id="paymentDate" name="paymentDate" class="form-control date-input" style="width: 160px;" required>
+        <div th:if="${not #lists.isEmpty(payroll_items) and payroll_items[0].period() != null}"
+             class="display-6"
+             th:text="${payroll_items[0].period()}">
         </div>
-
+    </div>
         <div class="table-responsive">
             <table class="table professional-theme">
                 <thead class="table-light">
@@ -76,7 +73,9 @@
                     th:data-nontaxable="${payrollItem.nonTaxable}"
                     th:data-payment-data="${payrollItem.paymentDate}"
                     th:data-employee-id="${payrollItem.employeeId}"
-                    th:data-payrollItem-id="${payrollItem.payrollItemId}">
+                    th:data-payrollItem-id="${payrollItem.payrollItemId}"
+                    th:data-month="${payrollItem.month}"
+                    th:data-year="${payrollItem.year}">
 
                     <td class="text-center fixed-col-small" th:text="${stat.index + 1}">1</td>
                     <td class="fixed-col-name" th:text="${payrollItem.fullName()}"></td>
@@ -175,7 +174,6 @@
                 <i class="bi bi-x-circle me-2"></i>Отмена
             </a>
         </div>
-    </form>
 </div>
 <script src="/js/calculationsForEditPI.js"></script>
 <script src="/js/removeEmployee.js"></script>

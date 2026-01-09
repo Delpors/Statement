@@ -6,8 +6,8 @@ import java.time.LocalDate;
 public record EmployeeResponse(
          Long employee_id,
          Long institutionId,
+         String surname,
          String name,
-         String surName,
          String lastname,
          String position,
          BigDecimal nonTaxable,

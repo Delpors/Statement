@@ -1,5 +1,6 @@
 package com.example.statement.repository;
 
+import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollItemsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,10 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface PayrollItemsRepository extends JpaRepository<PayrollItemsEntity, Long> {
 
     @Query("SELECT pi FROM PayrollItemsEntity pi " +
-    "WHERE pi.payroll.payrollid = :payrollId " +
+    "WHERE pi.payroll.payrollId = :payrollId " +
     "AND pi.institution.institutionId = :selectedInst " +
     "ORDER BY pi.totalIssued ASC")
     Page<PayrollItemsEntity> getAllByPayrollItemIdAndInstitutionId(@Param("payrollId") Long payrollId,
@@ -19,4 +23,7 @@ public interface PayrollItemsRepository extends JpaRepository<PayrollItemsEntity
 
 
     void deleteByPayrollItemId(Long payrollItemId);
+
+    Page<PayrollItemsEntity> findAllByYearAndInstitution(Integer year, InstitutionEntity institution,
+                                                               Pageable pageable);
 }

@@ -20,7 +20,7 @@ public class EmployeeConverter {
                 .map(employee -> new DataToCreatePayroll(
                         employee.getEmployeeId(),
                         employee.getInstitution().getInstitutionId(),
-                        employee.getSurName() + " " + employee.getName() + " " + employee.getLastname(),
+                        employee.fullName(),
                         employee.getNonTaxable(),
                         employee.getPosition(),
                         employee.getSalary()
@@ -66,8 +66,8 @@ public class EmployeeConverter {
             return new EmployeeResponse(
                     employeeEntity.getEmployeeId(),
                     employeeEntity.getInstitution()!=null? employeeEntity.getInstitution().getInstitutionId():null,
-                    employeeEntity.getName(),
                     employeeEntity.getSurName(),
+                    employeeEntity.getName(),
                     employeeEntity.getLastname(),
                     employeeEntity.getPosition(),
                     employeeEntity.getNonTaxable(),
