@@ -2,7 +2,7 @@ package com.example.statement.service;
 
 import com.example.statement.dto.respons.MonthlyPayrollData;
 import com.example.statement.dto.respons.PayrollItemsResponse;
-import com.example.statement.dto.respons.PayrollSummaryResponse;
+import com.example.statement.dto.respons.ReportResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -12,15 +12,15 @@ import java.util.*;
 
 public class Aggregator {
 
-    public static Page<PayrollSummaryResponse> payrollItems(Page<PayrollItemsResponse> yearSalaryResponse,
+    public static Page<ReportResponse> payrollItems(Page<PayrollItemsResponse> yearSalaryResponse,
                                                      Pageable pageable)
     {
-        Map<Long, PayrollSummaryResponse> summaryMap = new LinkedHashMap<>();
+        Map<Long, ReportResponse> summaryMap = new LinkedHashMap<>();
 
         yearSalaryResponse.getContent().forEach(item ->{
             Long employeeId = item.employeeId();
-            PayrollSummaryResponse summary = summaryMap.computeIfAbsent(employeeId, id ->{
-                PayrollSummaryResponse newSummary = new PayrollSummaryResponse();
+            ReportResponse summary = summaryMap.computeIfAbsent(employeeId, id ->{
+                ReportResponse newSummary = new ReportResponse();
 
                 newSummary.setEmployeeId(item.employeeId());
                 newSummary.setFullName(item.fullName());
@@ -45,7 +45,7 @@ public class Aggregator {
             summary.setTotalUnionFee(summary.getTotalUnionFee().add(item.unionFee()));
         });
 
-        List<PayrollSummaryResponse> summaryResponses = new ArrayList<>(summaryMap.values());
+        List<ReportResponse> summaryResponses = new ArrayList<>(summaryMap.values());
 
 
         int totalEmployees = summaryMap.size();
@@ -56,7 +56,7 @@ public class Aggregator {
         int fromIndex = Math.min(currentPage * pageSize, summaryResponses.size());
         int toIndex = Math.min((currentPage + 1) * pageSize, summaryResponses.size());
 
-        List<PayrollSummaryResponse> pagedList = summaryResponses.subList(fromIndex, toIndex);
+        List<ReportResponse> pagedList = summaryResponses.subList(fromIndex, toIndex);
 
         return new PageImpl<>(
                 pagedList,

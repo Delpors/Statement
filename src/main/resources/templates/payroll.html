@@ -36,10 +36,15 @@
     <div class="text-center mb-4">
         <h1 class="display-5">Список расчетно-платежных ведомостей</h1>
     </div>
-    <a th:href="@{/payroll/payrollItems/create}"  class="btn btn-edit"
-       style="background: linear-gradient(135deg, #3498db, #2980b9); border: none; color: white; margin-bottom: 20px;">
-        <i class="bi bi-table"></i> Сформировать
-    </a>
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <a th:href="@{/payroll/payrollItems/create}" class="btn btn-edit"
+           style="background: linear-gradient(135deg, #3498db, #2980b9); border: none; color: white;">
+            <i class="bi bi-table"></i> Сформировать
+        </a>
+        <a th:href="@{/home}" class="btn btn-cancel text-white">
+            <i class="bi bi-arrow-left me-2"></i> Назад
+        </a>
+    </div>
     <form id="payrollForm">
         <div class="table-responsive">
             <table class="table professional-theme">
@@ -99,11 +104,6 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="d-flex gap-3 justify-content-end">
-                <a th:href="@{/home}" class="btn btn-cancel text-white">
-                    <i class="bi bi-arrow-left me-2"></i> Назад
-                </a>
-            </div>
         </div>
     </form>
 </div>

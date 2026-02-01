@@ -2,6 +2,7 @@ package com.example.statement.service;
 
 import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.dto.respons.*;
+import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.service.manager.PayrollCommandService;
 import com.example.statement.service.query.PayrollQueryService;
@@ -13,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -84,8 +83,12 @@ public class PayrollOrchestratorService {
         payrollCommandService.deletePayrollItem(payrollItemId);
     }
 
-    public Page<PayrollSummaryResponse> getEmployeesSalary(Integer year, Long institutionId, Pageable pageable)
+    public Page<ReportResponse> getEmployeesSalary(Integer year, Long institutionId, Pageable pageable)
     {
         return payrollQueryService.getEmployeesYearSalary(year, institutionId, pageable);
+    }
+
+    public int getPayrollCount(InstitutionEntity institution){
+        return payrollQueryService.getCount(institution);
     }
 }

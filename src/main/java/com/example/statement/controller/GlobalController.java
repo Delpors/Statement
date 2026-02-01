@@ -19,7 +19,7 @@ public class GlobalController {
     }
 
     @ModelAttribute
-    private void addInstitutionToModel(HttpSession session, Model model) {
+    private void addInstitutionToModel(HttpSession session, Model model){
 
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 

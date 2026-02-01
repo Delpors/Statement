@@ -42,7 +42,7 @@ public class InstitutionController {
 
     @PostMapping("/institutions/update/{id}")
     public String updateInstitution(@PathVariable Long id, @ModelAttribute InstitutionRequest request){
-        System.out.println("Id из UEL " + id);
+
         institutionService.updateInstitution(id, request);
         return "redirect:/institutions";
     }

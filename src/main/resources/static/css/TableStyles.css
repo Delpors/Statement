@@ -171,6 +171,15 @@
     font-weight: 600;
     transition: all 0.3s ease !important;
 }
+.btn-cancel {
+    background: linear-gradient(135deg, #ff7f00, #ff5500);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+}
 
 .btn-primary:hover {
     transform: translateY(-2px);

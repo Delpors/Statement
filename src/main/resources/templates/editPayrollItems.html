@@ -41,6 +41,14 @@
              class="display-6"
              th:text="${payroll_items[0].period()}">
         </div>
+        <div class="d-flex gap-3 justify-content-left mb-4">
+            <button type="submit" onclick="submitPayroll()" class="btn btn-submit text-white">
+                <i class="bi bi-floppy me-2"></i>Сохранить
+            </button>
+            <a th:href="@{/payroll}" class="btn btn-cancel text-white">
+                <i class="bi bi-x-circle me-2"></i>Отмена
+            </a>
+        </div>
     </div>
         <div class="table-responsive">
             <table class="table professional-theme">
@@ -166,14 +174,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex gap-3 justify-content-end mb-4">
-            <button type="submit" onclick="submitPayroll()" class="btn btn-submit text-white">
-                <i class="bi bi-floppy me-2"></i>Сохранить
-            </button>
-            <a th:href="@{/payroll}" class="btn btn-cancel text-white">
-                <i class="bi bi-x-circle me-2"></i>Отмена
-            </a>
-        </div>
+
 </div>
 <script src="/js/calculationsForEditPI.js"></script>
 <script src="/js/removeEmployee.js"></script>

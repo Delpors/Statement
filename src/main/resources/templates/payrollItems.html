@@ -42,7 +42,11 @@
              th:text="${payroll_items[0].period()}">
         </div>
     </div>
-
+    <div class="d-flex gap-3 justify-content-left mb-4">
+        <a th:href="@{/payroll}" class="btn btn-cancel text-white">
+            <i class="bi bi-arrow-left me-2"></i> Назад
+        </a>
+    </div>
     <form id="payrollForm">
         <div class="table-responsive">
             <table class="table professional-theme">
@@ -105,11 +109,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="d-flex gap-3 justify-content-end">
-                <a th:href="@{/payroll}" class="btn btn-cancel text-white">
-                    <i class="bi bi-arrow-left me-2"></i> Назад
-                </a>
-            </div>
+
         </div>
     </form>
 </div>

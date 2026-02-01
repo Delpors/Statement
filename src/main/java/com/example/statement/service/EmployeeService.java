@@ -27,12 +27,6 @@ public class EmployeeService {
         this.employeeConverter = employeeConverter;
     }
 
-    public EmployeeEntity getEmployeeById(Long id) {
-
-        return repository.findById(id)
-                .orElseThrow(()->new NoSuchElementException("Не найден сотрудник с id " + id));
-    }
-
     public EmployeeResponse getEmployeeDTOById(Long id) {
 
         EmployeeEntity employee = repository.findById(id)
@@ -45,12 +39,6 @@ public class EmployeeService {
                 .orElseThrow(()-> new NoSuchElementException("Сотрудники не найдены для организации с id: "+ instId));
 
         return employeeConverter.toResponse(employeeEntities);
-    }
-
-    public List<EmployeeEntity> getAllEmployeeEntities(Long instId) {
-
-        return repository.findActiveByInstitutionId(instId)
-                .orElseThrow(()-> new NoSuchElementException("Сотрудники не найдены для организации с id: "+ instId));
     }
 
     public void createEmployee(EmployeeRequest request, Long instId) {
@@ -72,6 +60,10 @@ public class EmployeeService {
 
         employeeToDelete.softDelete();
         repository.save(employeeToDelete);
+    }
+
+    public int getEmployeesCount(InstitutionEntity institution){
+        return repository.countAllByInstitutionAndActiveTrue(institution);
     }
 }
 

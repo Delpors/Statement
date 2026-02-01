@@ -14,14 +14,11 @@ import com.example.statement.service.converter.PayrollConverter;
 import com.example.statement.service.converter.PayrollItemConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.spel.spi.Function;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -46,7 +43,8 @@ public class PayrollQueryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PayrollItemsResponse> getPayrollItems(Long payrollId, Long selectedInst, Pageable pageable){
+    public Page<PayrollItemsResponse> getPayrollItems(Long payrollId, Long selectedInst, Pageable pageable)
+    {
 
         Page<PayrollItemsEntity> payrollItemsEntityPage;
 
@@ -68,7 +66,8 @@ public class PayrollQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<DataToCreatePayroll> getIEmployeeItems(Long instId){
+    public List<DataToCreatePayroll> getIEmployeeItems(Long instId)
+    {
 
         return employeeConverter
                 .toCreatePayrollResponse(employeeRepository
@@ -78,7 +77,8 @@ public class PayrollQueryService {
 
 
     @Transactional(readOnly = true)
-    public Page<PayrollSummaryResponse> getEmployeesYearSalary(Integer year, Long institutionId, Pageable pageable) {
+    public Page<ReportResponse> getEmployeesYearSalary(Integer year, Long institutionId, Pageable pageable)
+    {
         InstitutionEntity institution = institutionRepository.findById(institutionId)
                 .orElseThrow(() -> new NoSuchElementException("Организация не найдена"));
 
@@ -88,5 +88,10 @@ public class PayrollQueryService {
         Page<PayrollItemsResponse> yearSalaryResponse = payrollItemConverter.toResponse(payrollItems);
 
         return  Aggregator.payrollItems(yearSalaryResponse, pageable);
+    }
+
+    public int getCount(InstitutionEntity institution)
+    {
+        return payrollRepository.countAllByInstitution(institution);
     }
 }
