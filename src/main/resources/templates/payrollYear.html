@@ -37,11 +37,11 @@
 
 <div th:with="selectedYear=${param.year != null ? param.year[0] : 2025}" class="container-fluid mt-6">
     <div class="text-center mb-4">
-        <h1 class="display-5">Лицевые счета сотрудников учреждения</h1>
-        <h1 th:text="'За ' + ${selectedYear} + ' год'">За 2025 год</h1>
+        <h1 class="display-5">Отчет по заработной плате сотрудников</h1>
+        <h1 th:text="'За ' + ${selectedYear} + ' год'"></h1>
     </div>
 
-    <form th:action="@{/report/year}" method="get" class="d-flex flex-wrap align-items-center gap-3 mb-4 p-3 bg-light rounded shadow-sm">
+    <form th:action="@{/report/yearSalary}" method="get" class="d-flex flex-wrap align-items-center gap-3 mb-4 p-3 bg-light rounded shadow-sm">
         <div class="d-flex align-items-center gap-2 mb-0">
             <label for="year" class="form-label fw-bold mb-0">Год:</label>
             <input type="number"

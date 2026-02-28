@@ -59,7 +59,7 @@ public class PayrollItemConverter {
                         item.getPayrollItemId(),
                         item.getEmployee().getEmployeeId(),
                         item.getInstitution().getInstitutionId(),
-                        item.getEmployee().fullName(),
+                        item.getEmployee().getFullName(),
                         item.getEmployee().getNonTaxable(),
                         item.getEmployee().getPosition(),
                         item.getEmployee().getSalary(),

@@ -20,7 +20,7 @@ public class EmployeeConverter {
                 .map(employee -> new DataToCreatePayroll(
                         employee.getEmployeeId(),
                         employee.getInstitution().getInstitutionId(),
-                        employee.fullName(),
+                        employee.getFullName(),
                         employee.getNonTaxable(),
                         employee.getPosition(),
                         employee.getSalary()

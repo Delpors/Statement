@@ -16,7 +16,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PayrollEntity {
 
     @Id
@@ -62,7 +61,7 @@ public class PayrollEntity {
 
     @PrePersist
     protected void onCreate(){
-        System.out.println("Обновление общих сумм при создании");
+        System.out.println("Обновление общих сумм при формировании");
         createdAt = LocalDateTime.now();
         calculateTotals();
     }

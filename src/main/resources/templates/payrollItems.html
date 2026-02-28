@@ -34,7 +34,6 @@
 </nav>
 
 <div class="container-fluid mt-4">
-    <!-- Вариант 5: Заголовок с периодом на новой строке -->
     <div class="text-center mb-4">
         <h1 class="display-5">Расчетно-платежная ведомость</h1>
         <div th:if="${not #lists.isEmpty(payroll_items) and payroll_items[0].period() != null}"
@@ -115,7 +114,6 @@
 </div>
 
 <script>
-    // Функция для расчета общих итогов
     function calculateGrandTotals() {
         let totalBaseSalary = 0;
         let totalBonus = 0;
@@ -130,14 +128,11 @@
         let totalEmployeeDeduction = 0;
         let totalIssued = 0;
 
-        // Получаем все строки данных (исключая итоговую строку)
         const rows = document.querySelectorAll('tbody tr:not(.total-row)');
 
         rows.forEach(row => {
-            // Получаем ячейки текущей строки
             const cells = row.querySelectorAll('td');
 
-            // Преобразуем текст с учетом форматирования (заменяем запятые на точки)
             totalBaseSalary += parseFloat(cells[3].textContent.replace(',', '.')) || 0;
             totalBonus += parseFloat(cells[4].textContent.replace(',', '.')) || 0;
             totalFss += parseFloat(cells[5].textContent.replace(',', '.')) || 0;
@@ -152,12 +147,10 @@
             totalIssued += parseFloat(cells[14].textContent.replace(',', '.')) || 0;
         });
 
-        // Функция для форматирования числа с двумя десятичными знаками
         function formatNumber(num) {
             return num.toFixed(2).replace('.', ',');
         }
 
-        // Обновляем итоговую строку
         document.getElementById('grand-total-salary').textContent = formatNumber(totalBaseSalary);
         document.getElementById('grand-total-bonus').textContent = formatNumber(totalBonus);
         document.getElementById('grand-total-fss').textContent = formatNumber(totalFss);
@@ -172,7 +165,6 @@
         document.getElementById('grand-total-issued').textContent = formatNumber(totalIssued);
     }
 
-    // Автоматический расчет при загрузке страницы
     document.addEventListener('DOMContentLoaded', function() {
         calculateGrandTotals();
         console.log('Итоги рассчитаны автоматически');

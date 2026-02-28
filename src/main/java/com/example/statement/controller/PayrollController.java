@@ -107,6 +107,7 @@ public class PayrollController {
     {
 
         Long selectedInst = (Long) session.getAttribute("selectedInstId");
+
         Page<PayrollItemsResponse> payrollPage = payrollOrchestratorService.
                 getPayrollItems(payrollId, selectedInst, pageable);
 

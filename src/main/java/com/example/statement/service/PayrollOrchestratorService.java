@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -23,13 +24,15 @@ public class PayrollOrchestratorService {
 
     private final PayrollCommandService payrollCommandService;
     private final PayrollQueryService payrollQueryService;
+    private final Calculate calculate;
 
     public PayrollOrchestratorService(PayrollCommandService payrollCommandService,
-                                      PayrollQueryService payrollQueryService, PayrollItemsRepository payrollItemsRepository
+                                      PayrollQueryService payrollQueryService, PayrollItemsRepository payrollItemsRepository, Calculate calculate
     ) {
 
         this.payrollCommandService = payrollCommandService;
         this.payrollQueryService = payrollQueryService;
+        this.calculate = calculate;
     }
 
     public void createOrUpdatePayroll(
@@ -90,5 +93,10 @@ public class PayrollOrchestratorService {
 
     public int getPayrollCount(InstitutionEntity institution){
         return payrollQueryService.getCount(institution);
+    }
+
+    public Map<Integer, TaxesResponse> getTaxesFromYear(Integer year, Long institutionId) {
+
+        return calculate.getAllFromYearTaxes(year, institutionId);
     }
 }

@@ -73,12 +73,17 @@ public class EmployeeEntity {
         this.deletedAt = LocalDate.now();
     }
 
-    public String fullName()
+    public String getFullName()
     {
         return Stream.of(surName, name, lastname)
                 .filter(Objects::nonNull)
                 .filter(s->!s.isBlank())
                 .collect(Collectors.joining(" "));
+    }
+
+    public void restore(){
+        this.active = true;
+        this.deletedAt = null;
     }
 
 }

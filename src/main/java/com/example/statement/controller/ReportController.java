@@ -31,7 +31,7 @@ public class ReportController {
         return "reportsList";
     }
 
-    @GetMapping("/year")
+    @GetMapping("/yearSalary")
     public String yearlySalaryReport(
             @RequestParam(required = false) Integer year,
             Model model,
@@ -52,10 +52,21 @@ public class ReportController {
         return "payrollYear";
     }
 
+    @GetMapping("/taxes")
+    public String yearSalaryTaxes(@RequestParam(required = true) Integer year,
+                                  Model model, HttpSession httpSession){
+
+        Long institutionId = (Long) httpSession.getAttribute("selectedInstId");
+        model.addAttribute("yearTaxes", payrollOrchestratorService.getTaxesFromYear(year, institutionId));
+        return "salaryTaxes";
+    }
+
     @PostMapping("/select")
     public String showReportSelector(@RequestParam ("report") String report){
         if (report.equals("EMPL_YEAR_PAY")) {
             return "payrollYear";
+        }else if (report.equals("TAXES")){
+            return "salaryTaxes";
         }
         return null;
     }

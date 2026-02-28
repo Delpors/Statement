@@ -29,19 +29,17 @@ public class PayrollCommandService {
     private final PayrollItemsRepository payrollItemsRepository;
     private final PayrollItemConverter payrollItemConverter;
     private final InstitutionRepository institutionRepository;
-    private final EmployeeRepository employeeRepository;
 
     public PayrollCommandService(
             PayrollRepository payrollRepository,
             PayrollItemsRepository payrollItemsRepository,
             PayrollItemConverter payrollItemConverter,
-            InstitutionRepository institutionRepository, EmployeeRepository employeeRepository){
+            InstitutionRepository institutionRepository){
 
         this.payrollRepository = payrollRepository;
         this.payrollItemsRepository = payrollItemsRepository;
         this.payrollItemConverter = payrollItemConverter;
         this.institutionRepository = institutionRepository;
-        this.employeeRepository = employeeRepository;
     }
     @Transactional
     public void createOrUpdatePayroll(

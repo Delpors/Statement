@@ -9,7 +9,6 @@ public record DataToCreatePayroll(
         BigDecimal nonTaxable,
         String position,
         BigDecimal baseSalary
-
 ) {
 
 }

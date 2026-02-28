@@ -47,11 +47,9 @@ public class Aggregator {
 
         List<ReportResponse> summaryResponses = new ArrayList<>(summaryMap.values());
 
-
         int totalEmployees = summaryMap.size();
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
-
 
         int fromIndex = Math.min(currentPage * pageSize, summaryResponses.size());
         int toIndex = Math.min((currentPage + 1) * pageSize, summaryResponses.size());
