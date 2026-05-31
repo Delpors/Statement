@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Отчет по налогам</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/TableStyles.css">
+    <style>
+        .tax-row-inkom { background-color: rgba(13, 110, 253, 0.05); }
+        .tax-row-union { background-color: rgba(25, 135, 84, 0.05); }
+        .tax-row-pfr { background-color: rgba(255, 193, 7, 0.05); }
+        .tax-row-fss { background-color: rgba(220, 53, 69, 0.05); }
+        .tax-label { font-weight: 600; }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand">
+            <i class="bi bi-building me-2"></i>
+            ВОС
+            <span th:if="${selectedInstitution != null}"
+                  class="badge bg-light text-dark ms-2"
+                  th:text="${selectedInstitution.institutionAbbrev}">
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/home}"><i class="bi bi-house me-1"></i> Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}"><i class="bi bi-person-circle me-1"></i> Выход</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:with="selectedYear=${param.year != null ? param.year[0] : 2025}" class="container-fluid mt-6">
+    <div class="text-center mb-4">
+        <h1 class="display-5">Отчет по налогам</h1>
+        <h1 th:text="'За ' + ${selectedYear} + ' год'"></h1>
+    </div>
+
+    <form th:action="@{/report/taxes}" method="get" class="d-flex flex-wrap align-items-center gap-3 mb-4 p-3 bg-light rounded shadow-sm">
+        <div class="d-flex align-items-center gap-2 mb-0">
+            <label for="year" class="form-label fw-bold mb-0">Год:</label>
+            <input type="number"
+                   class="form-control"
+                   id="year"
+                   name="year"
+                   th:value="${selectedYear}"
+                   min="2024"
+                   max="2100"
+                   style="width: 120px;">
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mb-0">
+            <button type="submit" class="btn btn-primary" title="Заполнить таблицу">
+                <i class="bi bi-table"></i> Показать данные
+            </button>
+            <a th:href="@{/report}" class="btn btn-cancel text-white">
+                <i class="bi bi-arrow-left me-2"></i> Назад
+            </a>
+        </div>
+    </form>
+
+    <div class="table-container">
+        <table class="table table-bordered professional-theme">
+            <thead class="table-light">
+            <tr>
+                <th class="text-center fixed-col-number fixed-col-header fw-bold">Вид налога</th>
+                <th th:each="month : ${#numbers.sequence(1, 12)}"
+                    class="text-center month-header"
+                    th:text="${T(java.time.Month).of(month).getDisplayName(
+                       T(java.time.format.TextStyle).SHORT,
+                       T(java.util.Locale).forLanguageTag('ru'))}">
+                    Месяц
+                </th>
+                <th class="text-center total-column">Итого за год</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- Подоходный налог -->
+            <tr class="tax-row-inkom">
+                <td class="tax-label">
+                    <i class="bi bi-cash-stack me-2 text-primary"></i>
+                    Подоходный налог
+                </td>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthData=${yearTaxes?.get(month)}">
+                        <td class="text-end number-cell">
+                            <span th:text="${monthData?.inkomTax != null ?
+                                #numbers.formatDecimal(monthData.inkomTax, 1, 2) : '0.00'}">
+                            </span>
+                        </td>
+                    </th:block>
+                </th:block>
+                <td class="text-end total-column number-cell fw-bold"
+                    th:text="${totalInkomTax != null ? #numbers.formatDecimal(totalInkomTax, 1, 2) : '0.00'}">
+                </td>
+            </tr>
+
+            <!-- Профсоюзный взнос -->
+            <tr class="tax-row-union">
+                <td class="tax-label">
+                    <i class="bi bi-people me-2 text-success"></i>
+                    Профсоюзный взнос
+                </td>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthData=${yearTaxes?.get(month)}">
+                        <td class="text-end number-cell">
+                            <span th:text="${monthData?.unionFee != null ?
+                                #numbers.formatDecimal(monthData.unionFee, 1, 2) : '0.00'}">
+                            </span>
+                        </td>
+                    </th:block>
+                </th:block>
+                <td class="text-end total-column number-cell fw-bold"
+                    th:text="${totalUnionFee != null ? #numbers.formatDecimal(totalUnionFee, 1, 2) : '0.00'}">
+                </td>
+            </tr>
+
+            <!-- ПФР -->
+            <tr class="tax-row-pfr">
+                <td class="tax-label">
+                    <i class="bi bi-shield me-2 text-warning"></i>
+                    ПФР
+                </td>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthData=${yearTaxes?.get(month)}">
+                        <td class="text-end number-cell">
+                            <span th:text="${monthData?.pfrTax != null ?
+                                #numbers.formatDecimal(monthData.pfrTax, 1, 2) : '0.00'}">
+                            </span>
+                        </td>
+                    </th:block>
+                </th:block>
+                <td class="text-end total-column number-cell fw-bold"
+                    th:text="${totalPfrTax != null ? #numbers.formatDecimal(totalPfrTax, 1, 2) : '0.00'}">
+                </td>
+            </tr>
+
+            <!-- ФСС -->
+            <tr class="tax-row-fss">
+                <td class="tax-label">
+                    <i class="bi bi-heart-pulse me-2 text-danger"></i>
+                    ФСС
+                </td>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthData=${yearTaxes?.get(month)}">
+                        <td class="text-end number-cell">
+                            <span th:text="${monthData?.fssTax != null ?
+                                #numbers.formatDecimal(monthData.fssTax, 1, 2) : '0.00'}">
+                            </span>
+                        </td>
+                    </th:block>
+                </th:block>
+                <td class="text-end total-column number-cell fw-bold"
+                    th:text="${totalFssTax != null ? #numbers.formatDecimal(totalFssTax, 1, 2) : '0.00'}">
+                </td>
+            </tr>
+
+            <!-- Итоговая строка -->
+            <tr class="table-secondary fw-bold">
+                <td class="tax-label">
+                    <i class="bi bi-calculator me-2"></i>
+                    ВСЕГО:
+                </td>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                    <th:block th:with="monthData=${yearTaxes?.get(month)}">
+                        <td class="text-end number-cell fw-bold">
+                            <span th:text="${monthData != null ?
+                                #numbers.formatDecimal(monthData.inkomTax +
+                                                      monthData.unionFee +
+                                                      monthData.pfrTax +
+                                                      monthData.fssTax, 1, 2) : '0.00'}">
+                            </span>
+                        </td>
+                    </th:block>
+                </th:block>
+                <td class="text-end total-column number-cell fw-bold" style="background-color: #dee2e6;">
+                    <span th:text="${grandTotal != null ? #numbers.formatDecimal(grandTotal, 1, 2) : '0.00'}">
+                    </span>
+                </td>
+            </tr>
+
+            <tr th:if="${yearTaxes == null or yearTaxes.isEmpty()}">
+                <td colspan="14" class="text-center py-5 text-muted">
+                    <i class="bi bi-table me-2"></i>
+                    Нет данных для отображения. Выберите год и нажмите "Показать данные".
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Легенда -->
+    <div class="mt-3 p-2 bg-light rounded small">
+        <div class="d-flex flex-wrap gap-4">
+            <div><span class="badge bg-primary">■</span> Подоходный налог</div>
+            <div><span class="badge bg-success">■</span> Профсоюзный взнос</div>
+            <div><span class="badge bg-warning">■</span> ПФР</div>
+            <div><span class="badge bg-danger">■</span> ФСС</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateTableHeight() {
+        const headerHeight = document.querySelector('.container-fluid').offsetTop;
+        const tableContainer = document.querySelector('.table-container');
+        if (tableContainer) {
+            const availableHeight = window.innerHeight - headerHeight - 200;
+            tableContainer.style.maxHeight = Math.max(400, availableHeight) + 'px';
+        }
+    }
+
+    window.addEventListener('load', updateTableHeight);
+    window.addEventListener('resize', updateTableHeight);
+
+    document.querySelector('form').addEventListener('submit', function() {
+        setTimeout(function() {
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({behavior: 'smooth'});
+            }
+        }, 100);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.querySelector('table');
+        if (table) {
+            table.classList.add('table-striped');
+        }
+    });
+</script>
+</body>
+</html>
