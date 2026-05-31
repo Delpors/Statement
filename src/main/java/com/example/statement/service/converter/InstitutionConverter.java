@@ -1,7 +1,7 @@
 package com.example.statement.service.converter;
 
 import com.example.statement.dto.request.InstitutionRequest;
-import com.example.statement.dto.respons.InstitutionResponse;
+import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class InstitutionConverter {
 
     public InstitutionResponse toSingleResponse(InstitutionEntity instEntity){
         return new InstitutionResponse(
-                instEntity.getInstitutionId(),
+                instEntity.getId(),
                 instEntity.getInstitutionFullName(),
                 instEntity.getInstitutionAbbrev(),
                 instEntity.getDirector(),

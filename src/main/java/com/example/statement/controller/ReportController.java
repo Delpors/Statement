@@ -1,27 +1,26 @@
 package com.example.statement.controller;
 
 import com.example.statement.dto.request.PayrollPageableParams;
-import com.example.statement.dto.respons.ReportResponse;
-import com.example.statement.repository.PayrollItemsRepository;
-import com.example.statement.service.PayrollOrchestratorService;
-import com.example.statement.service.manager.PayrollCommandService;
+import com.example.statement.dto.response.ReportResponse;
+import com.example.statement.dto.response.TaxesResponse;
+import com.example.statement.service.Calculate;
+import com.example.statement.service.query.PayrollQueryService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/report")
+@RequiredArgsConstructor
 public class ReportController {
 
-    private final PayrollOrchestratorService payrollOrchestratorService;
-
-    public ReportController(PayrollItemsRepository payrollItemsRepository,
-                            PayrollCommandService payrollCommandService,
-                            PayrollOrchestratorService payrollOrchestratorService) {
-        this.payrollOrchestratorService = payrollOrchestratorService;
-    }
+    private final Calculate calculate;
+    private final PayrollQueryService payrollQueryService;
 
     @GetMapping
     public String reportList(Model model){
@@ -42,7 +41,7 @@ public class ReportController {
         PayrollPageableParams pageableParams = new PayrollPageableParams();
         pageableParams.setSize(120);
 
-        Page<ReportResponse> response = payrollOrchestratorService.getEmployeesSalary(year, institutionId, pageableParams.getPageable());
+        Page<ReportResponse> response = payrollQueryService.getEmployeesYearSalary(year, institutionId, pageableParams.getPageable());
 
         model.addAttribute("items", response.getContent());
         model.addAttribute("totalPages", response.getTotalPages());
@@ -53,11 +52,20 @@ public class ReportController {
     }
 
     @GetMapping("/taxes")
-    public String yearSalaryTaxes(@RequestParam(required = true) Integer year,
+    public String yearSalaryTaxes(@RequestParam(required = false) Integer year,
                                   Model model, HttpSession httpSession){
 
         Long institutionId = (Long) httpSession.getAttribute("selectedInstId");
-        model.addAttribute("yearTaxes", payrollOrchestratorService.getTaxesFromYear(year, institutionId));
+        Map<Integer, TaxesResponse> yearTaxes = calculate.getAllFromYearTaxes(year, institutionId);
+        TaxesResponse taxes = yearTaxes.get(0);
+
+        model.addAttribute("yearTaxes", yearTaxes);
+        model.addAttribute("totalInkomTax", taxes.getTotalInkomTax());
+        model.addAttribute("totalUnionFee", taxes.getTotalUnionFee());
+        model.addAttribute("totalPfrTax", taxes.getTotalPfrTax());
+        model.addAttribute("totalFssTax", taxes.getTotalFssTax());
+        model.addAttribute("grandTotal", taxes.getGrandTotal());
+
         return "salaryTaxes";
     }
 

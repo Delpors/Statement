@@ -1,8 +1,8 @@
 package com.example.statement.service;
 
-import com.example.statement.dto.respons.MonthlyPayrollData;
-import com.example.statement.dto.respons.PayrollItemsResponse;
-import com.example.statement.dto.respons.ReportResponse;
+import com.example.statement.dto.response.MonthlyPayrollData;
+import com.example.statement.dto.response.PayrollItemsResponse;
+import com.example.statement.dto.response.ReportResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +33,7 @@ public class Aggregator {
             });
 
             String monthKay = String.format("%s-%02d", item.year(), item.month());
+
             MonthlyPayrollData monthly = new MonthlyPayrollData(
                     item.baseSalary(),
                     item.incomeTax(),

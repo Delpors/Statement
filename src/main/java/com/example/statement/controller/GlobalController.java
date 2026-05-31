@@ -1,6 +1,6 @@
 package com.example.statement.controller;
 
-import com.example.statement.dto.respons.InstitutionResponse;
+import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.service.InstitutionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;

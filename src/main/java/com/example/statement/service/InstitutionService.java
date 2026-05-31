@@ -1,27 +1,24 @@
 package com.example.statement.service;
 
 import com.example.statement.dto.request.InstitutionRequest;
-import com.example.statement.dto.respons.InstitutionResponse;
+import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.service.converter.InstitutionConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class InstitutionService {
 
     private final InstitutionRepository instRepository;
     private final InstitutionConverter institutionConverter;
 
-    InstitutionService (InstitutionRepository instRepository,
-                        InstitutionConverter institutionConverter)
-    {
-        this.instRepository = instRepository;
-        this.institutionConverter = institutionConverter;
-    }
+
 
     public void createInstitution(InstitutionRequest request) {
         instRepository.save(new InstitutionConverter().toEntity(null,request));
@@ -34,7 +31,7 @@ public class InstitutionService {
         InstitutionEntity existInst = instRepository
                 .findById(id)
                 .orElseThrow(()-> new NoSuchElementException
-                        ("Организация с id" + inst.getInstitutionId() + "не найдена"));
+                        ("Организация с id" + inst.getId() + "не найдена"));
 
         existInst.setInstitutionFullName(inst.getInstitutionFullName());
         existInst.setInstitutionAbbrev(inst.getInstitutionAbbrev());
@@ -55,11 +52,9 @@ public class InstitutionService {
 
     public InstitutionEntity getInstitutionEntityById(Long id){
 
-        InstitutionEntity institutionEntity = instRepository.findById(id)
+        return instRepository.findById(id)
                 .orElseThrow(()-> new NoSuchElementException
                         ("Организация с id" + id + "не найдена"));
-
-        return institutionEntity;
     }
     public InstitutionResponse getInstitutionDTOById(Long id){
 

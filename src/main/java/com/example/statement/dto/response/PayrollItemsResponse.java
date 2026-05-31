@@ -1,6 +1,4 @@
-package com.example.statement.dto.respons;
-
-import com.example.statement.entity.PayrollEntity;
+package com.example.statement.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

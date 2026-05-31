@@ -20,13 +20,13 @@ public class PayrollEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payrollId;
+    private Long id;
 
     @OneToMany(mappedBy = "payroll", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PayrollItemsEntity> items = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "institution_Id")
+    @JoinColumn(name = "instId")
     private InstitutionEntity institution;
 
     @Column(name = "totalIncome")

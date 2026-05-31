@@ -14,15 +14,15 @@ import java.util.Optional;
 public interface PayrollItemsRepository extends JpaRepository<PayrollItemsEntity, Long> {
 
     @Query("SELECT pi FROM PayrollItemsEntity pi " +
-    "WHERE pi.payroll.payrollId = :payrollId " +
-    "AND pi.institution.institutionId = :selectedInst " +
-    "ORDER BY pi.totalIssued ASC")
+    "WHERE pi.payroll.id = :payrollId " +
+    "AND pi.institution.id = :selectedInst " +
+    "ORDER BY pi.employee.name ASC")
     Page<PayrollItemsEntity> getAllByPayrollItemIdAndInstitutionId(@Param("payrollId") Long payrollId,
                                                         @Param("selectedInst") Long selectedInst,
                                                         Pageable pageable);
 
 
-    void deleteByPayrollItemId(Long payrollItemId);
+    void deleteById(Long id);
 
     Page<PayrollItemsEntity> findAllByYearAndInstitution(Integer year, InstitutionEntity institution,
                                                                Pageable pageable);

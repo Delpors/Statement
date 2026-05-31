@@ -13,11 +13,13 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
 
     List<EmployeeEntity> findAllByActive(Boolean active);
 
-    EmployeeEntity findByEmployeeIdAndInstitution(Long employeeId, InstitutionEntity institution);
+    @Query("SELECT e FROM EmployeeEntity e WHERE e.id = :employeeId AND e.institution.id = :instId")
+    Optional<EmployeeEntity> findByEmployeeIdAndInstId(@Param("employeeId") Long employeeId, @Param("instId") Long instId);
 
-    @Query("SELECT e FROM EmployeeEntity e WHERE e.institution.institutionId = :institutionId AND e.active = true")
-    Optional<List<EmployeeEntity>> findActiveByInstitutionId(@Param("institutionId") Long institutionId);
+    @Query("SELECT e FROM EmployeeEntity e WHERE e.institution.id = :instId AND e.active = true")
+    List<EmployeeEntity> findActiveByInstId(@Param("instId") Long instId);
 
-    int countAllByInstitutionAndActiveTrue(InstitutionEntity institution);
+    @Query("SELECT count (e) FROM EmployeeEntity e WHERE e.institution.id = :instId AND e.active = true ")
+    long countAllByInstitutionAndActiveTrue(@Param("instId") Long instId);
 }
 

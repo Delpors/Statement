@@ -16,18 +16,18 @@ public class PayrollItemsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payrollItemId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employeeId")
     private EmployeeEntity employee;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payroll_id")
+    @JoinColumn(name = "peurollId")
     private PayrollEntity payroll;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "institution_Id")
+    @JoinColumn(name = "instId")
     private InstitutionEntity institution;
 
     //Начисление

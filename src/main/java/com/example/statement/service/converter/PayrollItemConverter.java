@@ -1,12 +1,13 @@
 package com.example.statement.service.converter;
 
 import com.example.statement.dto.request.PayrollItemRequest;
-import com.example.statement.dto.respons.InstitutionResponse;
-import com.example.statement.dto.respons.PayrollItemsResponse;
+import com.example.statement.dto.response.PayrollItemsResponse;
 import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollItemsEntity;
+import com.example.statement.exceptions.EmployeeNotFoundException;
 import com.example.statement.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -15,21 +16,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class PayrollItemConverter {
     private final EmployeeRepository employeeRepository;
 
-    public PayrollItemConverter(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
     public List<PayrollItemsEntity> toEntity (List<PayrollItemRequest> requests,
-                                              InstitutionEntity institution){
+                                              InstitutionEntity institution) {
 
         return requests.stream().map(
 
                 dto-> {
                     PayrollItemsEntity entity = new PayrollItemsEntity();
-                    EmployeeEntity employee = employeeRepository.findByEmployeeIdAndInstitution(dto.employeeId(), institution);
+                    EmployeeEntity employee = employeeRepository
+                            .findByEmployeeIdAndInstId(dto.employeeId(), institution.getId())
+                            .orElseThrow(()-> new EmployeeNotFoundException("Сотрудник не найден"));
 
                     entity.setEmployee(employee);
                     entity.setInstitution(institution);
@@ -56,9 +56,9 @@ public class PayrollItemConverter {
         List<PayrollItemsResponse> dtos = payrollItemsEntities
                 .stream()
                 .map(item -> new PayrollItemsResponse(
-                        item.getPayrollItemId(),
-                        item.getEmployee().getEmployeeId(),
-                        item.getInstitution().getInstitutionId(),
+                        item.getId(),
+                        item.getEmployee().getId(),
+                        item.getInstitution().getId(),
                         item.getEmployee().getFullName(),
                         item.getEmployee().getNonTaxable(),
                         item.getEmployee().getPosition(),

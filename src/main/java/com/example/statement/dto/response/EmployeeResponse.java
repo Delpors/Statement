@@ -1,4 +1,4 @@
-package com.example.statement.dto.respons;
+package com.example.statement.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public record EmployeeResponse(
          Long employee_id,
          Long institutionId,
-         String surname,
+         String surName,
          String name,
          String lastname,
          String position,

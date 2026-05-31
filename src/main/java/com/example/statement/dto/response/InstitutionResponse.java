@@ -1,4 +1,4 @@
-package com.example.statement.dto.respons;
+package com.example.statement.dto.response;
 
 
 public record InstitutionResponse(

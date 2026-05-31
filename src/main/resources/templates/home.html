@@ -83,7 +83,7 @@
                     <h5 class="card-title">Сотрудники</h5>
                     <p class="card-text" >Управление данными сотрудников, кадровый учет, должности и отделы</p>
                     <div class="mb-3">
-                        <span class="stats-badge">Всего: 124 сотрудника</span>
+                        <span class="stats-badge">Всего: <span th:text="${EmployeeCount}"></span> сотрудника</span>
                     </div>
                     <div class="d-grid gap-2">
                         <a th:href="@{/employees}" class="btn btn-card">
@@ -106,7 +106,7 @@
                     <h5 class="card-title">Ведомости</h5>
                     <p class="card-text">Расчетные и платежные ведомости, начисление заработной платы</p>
                     <div class="mb-3">
-                        <span class="stats-badge">За месяц: 28 ведомостей</span>
+                        <span class="stats-badge">Всего: <span th:text="${PayrollCount}"></span> ведомостей</span>
                     </div>
                     <div class="d-grid gap-2">
                         <a th:href="@{/payroll}" class="btn btn-card">
@@ -134,7 +134,7 @@
                         <a th:href="@{/report}" class="btn btn-card">
                             <i class="bi bi-list-ul me-2"></i> Просмотреть список
                         </a>
-                        <a th:href="@{/report/year}" class="btn btn-outline-secondary btn-sm">
+                        <a th:href="@{/report}" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-plus-circle me-1"></i> Создать отчет
                         </a>
                     </div>

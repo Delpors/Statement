@@ -1,69 +1,84 @@
 package com.example.statement.service;
 
 import com.example.statement.dto.request.EmployeeRequest;
-import com.example.statement.dto.respons.EmployeeResponse;
+import com.example.statement.dto.response.EmployeeResponse;
 import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.entity.InstitutionEntity;
+import com.example.statement.exceptions.EmployeeNotFoundException;
 import com.example.statement.repository.EmployeeRepository;
 import com.example.statement.service.converter.EmployeeConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository repository;
     private final InstitutionService institutionService;
     private final EmployeeConverter employeeConverter;
 
-    public EmployeeService(EmployeeRepository repository,
-                           InstitutionService institutionService,
-                           EmployeeConverter employeeConverter) {
-        this.repository = repository;
-        this.institutionService = institutionService;
-        this.employeeConverter = employeeConverter;
-    }
+    public EmployeeResponse getEmployeeById(Long emplId) {
 
-    public EmployeeResponse getEmployeeDTOById(Long id) {
-
-        EmployeeEntity employee = repository.findById(id)
-                .orElseThrow(()->new NoSuchElementException("Не найден сотрудник с id " + id));
+        EmployeeEntity employee = repository.findById(emplId)
+                .orElseThrow(()->new EmployeeNotFoundException("Не найден сотрудник с id " + emplId));
         return employeeConverter.toSingleResponse(employee);
     }
 
-    public List<EmployeeResponse> getAllEmployees(Long instId) {
-        List<EmployeeEntity> employeeEntities = repository.findActiveByInstitutionId(instId)
-                .orElseThrow(()-> new NoSuchElementException("Сотрудники не найдены для организации с id: "+ instId));
+    public List<EmployeeResponse> getAllActiveEmployeesByInstitutionId(Long instId) {
 
+        List<EmployeeEntity> employeeEntities = repository.findActiveByInstId(instId);
         return employeeConverter.toResponse(employeeEntities);
     }
 
-    public void createEmployee(EmployeeRequest request, Long instId) {
+    @Transactional
+    public void createEmployeeForInstitution(EmployeeRequest request, Long instId) {
+
+        if (request==null){
+            throw new IllegalArgumentException("Сведения о сотруднике не могут быть пустыми");
+        }
 
         InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
+
         repository.save(employeeConverter.toSingleEntity(request, institutionEntity));
     }
 
-    public void updateEmployee(EmployeeRequest request, Long instId) {
+    @Transactional
+    public void updateEmployee(Long emplId, EmployeeRequest request, Long instId) {
 
-        InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
-        repository.save(employeeConverter.toSingleEntity(request, institutionEntity));
+        if (request==null){
+            throw new IllegalArgumentException("Сведения о сотруднике не могут быть пустыми");
+        }
+
+        EmployeeEntity existingEmpl = repository
+                .findByEmployeeIdAndInstId(emplId, instId)
+                .orElseThrow(()-> new EmployeeNotFoundException("Сотрудник не найден."));
+
+        existingEmpl.setName(request.name());
+        existingEmpl.setSurName(request.surName());
+        existingEmpl.setLastname(request.lastname());
+        existingEmpl.setPosition(request.position());
+        existingEmpl.setNonTaxable(request.nonTaxable());
+        existingEmpl.setSalary(request.salary());
+        existingEmpl.setBankAccount(request.bankAccount());
+        existingEmpl.setEmail(request.email());
     }
 
-    public void deleteEmployee(Long id) {
+    @Transactional
+    public void deleteEmployee(Long emplId) {
 
-        EmployeeEntity employeeToDelete = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Сотрудник не найден"));
+        EmployeeEntity employeeToDelete = repository.findById(emplId)
+                .orElseThrow(()-> new EmployeeNotFoundException("Сотрудник не найден"));
 
         employeeToDelete.softDelete();
         repository.save(employeeToDelete);
     }
 
-    public int getEmployeesCount(InstitutionEntity institution){
-        return repository.countAllByInstitutionAndActiveTrue(institution);
+    public long getEmployeesCount(Long emplId){
+        return repository.countAllByInstitutionAndActiveTrue(emplId);
     }
 }
 

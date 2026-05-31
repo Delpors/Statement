@@ -1,6 +1,6 @@
 package com.example.statement.service.converter;
 
-import com.example.statement.dto.respons.PayrollResponse;
+import com.example.statement.dto.response.PayrollResponse;
 import com.example.statement.entity.PayrollEntity;
 
 import java.util.Collections;
@@ -21,8 +21,8 @@ public class PayrollConverter {
     public PayrollResponse singleEntityToResponse(PayrollEntity payroll) {
         try {
             return new PayrollResponse(
-                    payroll.getPayrollId(),
-                    payroll.getInstitution().getInstitutionId(),
+                    payroll.getId(),
+                    payroll.getInstitution().getId(),
                     payroll.getTotalIncome(),
                     payroll.getTotalUnionFee(),
                     payroll.getTotalIncomeTax(),

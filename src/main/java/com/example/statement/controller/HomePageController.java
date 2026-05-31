@@ -1,30 +1,22 @@
 package com.example.statement.controller;
 
 import com.example.statement.entity.InstitutionEntity;
-import com.example.statement.repository.EmployeeRepository;
-import com.example.statement.repository.PayrollRepository;
 import com.example.statement.service.EmployeeService;
 import com.example.statement.service.InstitutionService;
-import com.example.statement.service.PayrollOrchestratorService;
+import com.example.statement.service.query.PayrollQueryService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
 public class HomePageController {
 
-    final InstitutionService institutionService;
-    final EmployeeService employeeService;
-    final PayrollOrchestratorService payrollService;
-
-    HomePageController(InstitutionService institutionService,
-                       PayrollRepository payrollRepository, EmployeeService employeeService, PayrollOrchestratorService payrollService)
-    {
-        this.institutionService = institutionService;
-        this.employeeService = employeeService;
-        this.payrollService = payrollService;
-    }
+    private final InstitutionService institutionService;
+    private final EmployeeService employeeService;
+    private final PayrollQueryService payrollQueryService;
 
     @GetMapping("/")
     public String showInstitutions(Model model){
@@ -35,20 +27,19 @@ public class HomePageController {
     }
 
     @PostMapping("/")
-    public String selectInstitution(@RequestParam Long institutionId, HttpSession session) {
-
-        session.setAttribute("selectedInstId", institutionId);
+    public String selectInstitution(@RequestParam Long id, HttpSession session) {
+        session.setAttribute("selectedInstId", id);
         return "redirect:/home";
     }
 
     @GetMapping("/home")
-    public String homePage(Model model, HttpSession httpSession){
+    public String homePage(Model model,
+                           @SessionAttribute("selectedInstId") Long institutionId){
 
-        Long institutionId = (Long) httpSession.getAttribute("selectedInstId");
         InstitutionEntity institution = institutionService.getInstitutionEntityById(institutionId);
 
-        model.addAttribute("EmployeeCount", employeeService.getEmployeesCount(institution));
-        model.addAttribute("PayrollCount", payrollService.getPayrollCount(institution));
+        model.addAttribute("EmployeeCount", employeeService.getEmployeesCount(institutionId));
+        model.addAttribute("PayrollCount", payrollQueryService.getCount(institution));
 
         return "home";
     }

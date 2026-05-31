@@ -2,8 +2,8 @@ package com.example.statement.service.converter;
 
 
 import com.example.statement.dto.request.EmployeeRequest;
-import com.example.statement.dto.respons.DataToCreatePayroll;
-import com.example.statement.dto.respons.EmployeeResponse;
+import com.example.statement.dto.response.DataToCreatePayroll;
+import com.example.statement.dto.response.EmployeeResponse;
 import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.entity.InstitutionEntity;
 import org.springframework.stereotype.Component;
@@ -18,8 +18,8 @@ public class EmployeeConverter {
     public List<DataToCreatePayroll> toCreatePayrollResponse(List<EmployeeEntity> employees) {
         return employees.stream()
                 .map(employee -> new DataToCreatePayroll(
-                        employee.getEmployeeId(),
-                        employee.getInstitution().getInstitutionId(),
+                        employee.getId(),
+                        employee.getInstitution().getId(),
                         employee.getFullName(),
                         employee.getNonTaxable(),
                         employee.getPosition(),
@@ -64,8 +64,8 @@ public class EmployeeConverter {
     public EmployeeResponse toSingleResponse(EmployeeEntity employeeEntity){
         try {
             return new EmployeeResponse(
-                    employeeEntity.getEmployeeId(),
-                    employeeEntity.getInstitution()!=null? employeeEntity.getInstitution().getInstitutionId():null,
+                    employeeEntity.getId(),
+                    employeeEntity.getInstitution()!=null? employeeEntity.getInstitution().getId():null,
                     employeeEntity.getSurName(),
                     employeeEntity.getName(),
                     employeeEntity.getLastname(),

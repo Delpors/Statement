@@ -1,6 +1,6 @@
 package com.example.statement.service.query;
 
-import com.example.statement.dto.respons.*;
+import com.example.statement.dto.response.*;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.entity.PayrollItemsEntity;
@@ -12,6 +12,7 @@ import com.example.statement.service.Aggregator;
 import com.example.statement.service.converter.EmployeeConverter;
 import com.example.statement.service.converter.PayrollConverter;
 import com.example.statement.service.converter.PayrollItemConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.*;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 public class PayrollQueryService {
     private final PayrollRepository payrollRepository;
     private final PayrollItemsRepository payrollItemsRepository;
@@ -29,18 +31,6 @@ public class PayrollQueryService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeConverter employeeConverter;
     private final InstitutionRepository institutionRepository;
-
-    public PayrollQueryService(PayrollRepository payrollRepository,
-                               PayrollItemsRepository payrollItemsRepository,
-                               PayrollItemConverter payrollItemConverter, EmployeeRepository employeeRepository, EmployeeConverter employeeConverter, InstitutionRepository institutionRepository)
-    {
-        this.payrollRepository = payrollRepository;
-        this.payrollItemsRepository = payrollItemsRepository;
-        this.payrollItemConverter = payrollItemConverter;
-        this.employeeRepository = employeeRepository;
-        this.employeeConverter = employeeConverter;
-        this.institutionRepository = institutionRepository;
-    }
 
     @Transactional(readOnly = true)
     public Page<PayrollItemsResponse> getPayrollItems(Long payrollId, Long selectedInst, Pageable pageable)
@@ -71,8 +61,7 @@ public class PayrollQueryService {
 
         return employeeConverter
                 .toCreatePayrollResponse(employeeRepository
-                        .findActiveByInstitutionId(instId)
-                        .orElseThrow(()-> new NoSuchElementException("Не найдены сотрудники для организации с Id:" + instId)));
+                        .findActiveByInstId(instId));
     }
 
 
@@ -90,7 +79,7 @@ public class PayrollQueryService {
         return  Aggregator.payrollItems(yearSalaryResponse, pageable);
     }
 
-    public int getCount(InstitutionEntity institution)
+    public long getCount(InstitutionEntity institution)
     {
         return payrollRepository.countAllByInstitution(institution);
     }

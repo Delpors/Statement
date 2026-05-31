@@ -9,6 +9,7 @@ import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.repository.PayrollRepository;
 import com.example.statement.service.converter.PayrollItemConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PayrollCommandService {
 
     private final PayrollRepository payrollRepository;
@@ -30,17 +32,6 @@ public class PayrollCommandService {
     private final PayrollItemConverter payrollItemConverter;
     private final InstitutionRepository institutionRepository;
 
-    public PayrollCommandService(
-            PayrollRepository payrollRepository,
-            PayrollItemsRepository payrollItemsRepository,
-            PayrollItemConverter payrollItemConverter,
-            InstitutionRepository institutionRepository){
-
-        this.payrollRepository = payrollRepository;
-        this.payrollItemsRepository = payrollItemsRepository;
-        this.payrollItemConverter = payrollItemConverter;
-        this.institutionRepository = institutionRepository;
-    }
     @Transactional
     public void createOrUpdatePayroll(
             List<PayrollItemRequest> requests,
@@ -92,7 +83,7 @@ public class PayrollCommandService {
             List<PayrollItemsEntity> newEntities) {
 
         Function<PayrollItemsEntity, String> keyFunc = entity ->
-                entity.getEmployee().getEmployeeId() + "_" + entity.getPaymentDate();
+                entity.getEmployee().getId() + "_" + entity.getPaymentDate();
 
         Set<String> newKeys = newEntities.stream()
                 .map(keyFunc)
@@ -144,7 +135,7 @@ public class PayrollCommandService {
     public void deletePayrollItem(Long id){
 
         try {
-            payrollItemsRepository.deleteByPayrollItemId(id);
+            payrollItemsRepository.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             throw new NoSuchElementException("Не найдена строка в ведомости с id: "+id);
         }

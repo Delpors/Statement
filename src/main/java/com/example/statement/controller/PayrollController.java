@@ -2,9 +2,11 @@ package com.example.statement.controller;
 
 import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.dto.request.PayrollPageableParams;
-import com.example.statement.service.PayrollOrchestratorService;
-import com.example.statement.dto.respons.PayrollItemsResponse;
+import com.example.statement.dto.response.PayrollItemsResponse;
+import com.example.statement.service.manager.PayrollCommandService;
+import com.example.statement.service.query.PayrollQueryService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -15,38 +17,36 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/payroll")
 public class PayrollController {
 
-    PayrollOrchestratorService payrollOrchestratorService;
-
-    public PayrollController(PayrollOrchestratorService payrollOrchestratorService){
-        this.payrollOrchestratorService = payrollOrchestratorService;
-    }
+    private final PayrollCommandService  payrollCommandService;
+    private final PayrollQueryService  payrollQueryService;
 
     @GetMapping
     public String showPayroll(Model model, HttpSession session)
     {
-        Long selectedInstId = (Long) session.getAttribute("selectedInstId");
+        Long instId = (Long) session.getAttribute("selectedInstId");
 
-        model.addAttribute("payroll", payrollOrchestratorService.getAllPayrolls(selectedInstId));
+        model.addAttribute("payroll", payrollQueryService.getAllPayrolls(instId));
 
         return "payroll";
     }
 
     @GetMapping("/{payroll_id}")
-    public String deletePayroll(@PathVariable Long payroll_id)
+    public String deletePayroll(@PathVariable Long payrollId)
     {
-        payrollOrchestratorService.deletePayroll(payroll_id);
+        payrollCommandService.deletePayroll(payrollId);
         return "redirect:/payroll";
     }
     
     @GetMapping("/payrollItems/create")
     public String showPayrollItemsCreateForm(Model model, HttpSession session)
     {
-        Long selectedInstId = (Long) session.getAttribute("selectedInstId");
+        Long instId = (Long) session.getAttribute("selectedInstId");
 
-        model.addAttribute("items", payrollOrchestratorService.getItemsToCreatePayroll(selectedInstId));
+        model.addAttribute("items", payrollQueryService.getIEmployeeItems(instId));
 
         return "createPayrollItems";
     }
@@ -55,14 +55,14 @@ public class PayrollController {
     public String createPayrollItems(@RequestBody List<PayrollItemRequest> requests,
                                      HttpSession session)
     {
-        Long selectedInstId = (Long) session.getAttribute("selectedInstId");
-        if (selectedInstId==null){
+        Long instId = (Long) session.getAttribute("selectedInstId");
+        if (instId==null){
             throw new IllegalStateException("Организация не выбрана!");
         }
 
         System.out.println("Платежная ведомость за " + requests.getFirst().month());
 
-        payrollOrchestratorService.createOrUpdatePayroll(requests, selectedInstId);
+        payrollCommandService.createOrUpdatePayroll(requests, instId);
         return "redirect:/payroll?success";
     }
 
@@ -96,7 +96,7 @@ public class PayrollController {
                                     HttpSession session)
     {
 
-        payrollOrchestratorService.deletePayrollItem(payrollItemId);
+        payrollCommandService.deletePayrollItem(payrollItemId);
 
         LocalDate date = (LocalDate) session.getAttribute("currentPaymentDate");
         return "redirect:/payroll/payrollItems/edit/" + date;
@@ -108,8 +108,7 @@ public class PayrollController {
 
         Long selectedInst = (Long) session.getAttribute("selectedInstId");
 
-        Page<PayrollItemsResponse> payrollPage = payrollOrchestratorService.
-                getPayrollItems(payrollId, selectedInst, pageable);
+        Page<PayrollItemsResponse> payrollPage = payrollQueryService.getPayrollItems(payrollId, selectedInst, pageable);
 
         model.addAttribute("payroll_items", payrollPage.getContent());
         model.addAttribute("currentPage", payrollPage.getNumber());

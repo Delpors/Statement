@@ -21,12 +21,12 @@ import java.util.stream.Stream;
 public class EmployeeEntity {
 
     @Id
-    @Column(name = "employee_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employeeId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "institution_Id")
+    @JoinColumn(name = "Instid")
     private InstitutionEntity institution;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -85,5 +85,4 @@ public class EmployeeEntity {
         this.active = true;
         this.deletedAt = null;
     }
-
 }

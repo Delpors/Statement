@@ -63,7 +63,7 @@
         <tbody>
         <tr th:each="employee, stat : ${employees}">
             <td class="text-center" th:text="${stat.index + 1}">1</td>
-            <td th:text="${employee.surname}"></td>
+            <td th:text="${employee.surName}"></td>
             <td th:text="${employee.name}"></td>
             <td th:text="${employee.lastname}"></td>
 
@@ -72,14 +72,20 @@
             <td class="text-end" th:text="${employee.salary}"></td>
             <td class="text-center" th:text="${employee.bankAccount}"></td>
             <td class="text-center" th:text="${employee.email()}"></td>
+
             <td class="text-center">
                 <a th:href="@{/employees/edit/{id}(id=${employee.employee_id})}" class="btn btn-edit">
                     <i class="bi bi-pen"></i>
                 </a>
-                <a th:href="@{/employees/{id}(id=${employee.employee_id})}" class="btn btn-danger"
-                    onclick="return confirm('Вы уверены, что хотите удалить эту запись?')">
-                    <i class="bi bi-trash"></i>
-                </a>
+                <form th:action="@{/employees/{id}(id=${employee.employee_id})}"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="return confirm('Вы уверены, что хотите удалить эту запись?')">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
             </td>
         </tr>
         <tr class="total-row">
@@ -92,40 +98,32 @@
     </table>
 </div>
 <script>
-    // Функция для расчета общих итогов
     function calculateGrandTotals() {
         let totalEmployeeSalary = 0;
         let totalEmployeeNontaxable = 0;
 
-        // Получаем все строки данных (исключая итоговую строку)
         const rows = document.querySelectorAll('tbody tr:not(.total-row)');
 
         rows.forEach(row => {
-            // Получаем ячейки текущей строки
             const cells = row.querySelectorAll('td');
 
-            // Суммируем значения из каждой колонки
             totalEmployeeSalary += parseFloat(cells[6].textContent) || 0;
             totalEmployeeNontaxable += parseFloat(cells[5].textContent) || 0;
 
         });
 
-        // Обновляем итоговую строку
         document.getElementById('grand-total-nontaxable').textContent = totalEmployeeNontaxable.toFixed(2);
         document.getElementById('grand-total-salary').textContent = totalEmployeeSalary.toFixed(2);
 
     }
 
-    // Функция для форматирования чисел (если нужно)
     function formatNumber(value) {
         return parseFloat(value).toFixed(2);
     }
 
 
-    // Автоматический расчет при загрузке страницы
     document.addEventListener('DOMContentLoaded', function() {
 
-        // Выполняем первоначальный расчет
         calculateGrandTotals();
         console.log('Итоги рассчитаны автоматически');
     });

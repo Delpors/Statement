@@ -17,7 +17,7 @@ public class InstitutionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long institutionId;
+    private Long id;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY)
     private List<EmployeeEntity> employee = new ArrayList<>();

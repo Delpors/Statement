@@ -20,7 +20,7 @@
             <label for="institutionSelect" class="form-label">
                 <i class="bi bi-buildings"></i> Организация *
             </label>
-            <select class="form-select text-center" id="institutionSelect" th:field="*{institutionId}" required>
+            <select class="form-select text-center" id="institutionSelect" th:field="*{id}" required>
                 <option value=""> Выберите организацию </option>
                 <option th:each="inst : ${institutions}"
                         th:value="${inst.institution_Id}"
