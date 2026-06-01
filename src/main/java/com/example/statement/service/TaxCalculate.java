@@ -4,6 +4,7 @@ import com.example.statement.dto.response.TaxesResponse;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.repository.PayrollRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,9 +13,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class Calculate {
+public class TaxCalculate {
 
     private final PayrollRepository payrollRepository;
     private final BigDecimal pfr = BigDecimal.valueOf(0.3);

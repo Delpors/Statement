@@ -3,8 +3,8 @@ package com.example.statement.controller;
 import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.dto.request.PayrollPageableParams;
 import com.example.statement.dto.response.PayrollItemsResponse;
-import com.example.statement.service.manager.PayrollCommandService;
-import com.example.statement.service.query.PayrollQueryService;
+import com.example.statement.service.manager.IPayrollCommandService;
+import com.example.statement.service.query.IPayrollQueryService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +21,8 @@ import java.util.List;
 @RequestMapping("/payroll")
 public class PayrollController {
 
-    private final PayrollCommandService  payrollCommandService;
-    private final PayrollQueryService  payrollQueryService;
+    private final IPayrollCommandService payrollCommandService;
+    private final IPayrollQueryService payrollQueryService;
 
     @GetMapping
     public String showPayroll(Model model, HttpSession session)

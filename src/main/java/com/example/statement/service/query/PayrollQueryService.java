@@ -24,7 +24,8 @@ import java.util.*;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class PayrollQueryService {
+public class PayrollQueryService implements IPayrollQueryService{
+
     private final PayrollRepository payrollRepository;
     private final PayrollItemsRepository payrollItemsRepository;
     private final PayrollItemConverter payrollItemConverter;
@@ -45,8 +46,7 @@ public class PayrollQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<PayrollResponse> getAllPayrolls (
-            Long instId)
+    public List<PayrollResponse> getAllPayrolls (Long instId)
     {
         List<PayrollEntity> payrollEntity = payrollRepository.findAllByInstitutionId(instId)
                 .orElseThrow(()-> new NoSuchElementException("Не найдена организация с Id"+ instId));

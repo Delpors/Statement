@@ -1,9 +1,9 @@
 package com.example.statement.controller;
 
 import com.example.statement.entity.InstitutionEntity;
-import com.example.statement.service.EmployeeService;
-import com.example.statement.service.InstitutionService;
-import com.example.statement.service.query.PayrollQueryService;
+import com.example.statement.service.IEmployeeService;
+import com.example.statement.service.IInstitutionService;
+import com.example.statement.service.query.IPayrollQueryService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HomePageController {
 
-    private final InstitutionService institutionService;
-    private final EmployeeService employeeService;
-    private final PayrollQueryService payrollQueryService;
+    private final IInstitutionService institutionService;
+    private final IEmployeeService employeeService;
+    private final IPayrollQueryService payrollQueryService;
 
     @GetMapping("/")
     public String showInstitutions(Model model){

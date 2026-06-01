@@ -7,23 +7,23 @@ import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.service.converter.InstitutionConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class InstitutionService {
+public class InstitutionService implements IInstitutionService{
 
     private final InstitutionRepository instRepository;
     private final InstitutionConverter institutionConverter;
 
-
-
     public void createInstitution(InstitutionRequest request) {
-        instRepository.save(new InstitutionConverter().toEntity(null,request));
+        instRepository.save(institutionConverter.toEntity(null,request));
     }
 
+    @Transactional
     public void updateInstitution(Long id, InstitutionRequest request) {
 
         InstitutionEntity inst = new InstitutionConverter().toEntity(id,request);
@@ -38,10 +38,9 @@ public class InstitutionService {
         existInst.setDirector(inst.getDirector());
         existInst.setGeneralAccountant(inst.getGeneralAccountant());
         existInst.setAccountant(inst.getAccountant());
-
-        instRepository.save(existInst);
     }
-    
+
+    @Transactional
     public void deleteInstitution(Long id){
         if (!instRepository.existsById(id)){
             throw new NoSuchElementException("Организация с id" + id + "не найдена");
@@ -56,6 +55,7 @@ public class InstitutionService {
                 .orElseThrow(()-> new NoSuchElementException
                         ("Организация с id" + id + "не найдена"));
     }
+
     public InstitutionResponse getInstitutionDTOById(Long id){
 
         InstitutionEntity institutionEntity = instRepository.findById(id)

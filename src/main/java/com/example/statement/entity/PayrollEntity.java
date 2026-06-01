@@ -25,7 +25,7 @@ public class PayrollEntity {
     @OneToMany(mappedBy = "payroll", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PayrollItemsEntity> items = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instId")
     private InstitutionEntity institution;
 

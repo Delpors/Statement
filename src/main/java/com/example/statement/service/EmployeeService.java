@@ -15,10 +15,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeService implements IEmployeeService{
 
     private final EmployeeRepository repository;
-    private final InstitutionService institutionService;
+    private final IInstitutionService institutionService;
     private final EmployeeConverter employeeConverter;
 
     public EmployeeResponse getEmployeeById(Long emplId) {

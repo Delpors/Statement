@@ -3,7 +3,7 @@ package com.example.statement.controller;
 import com.example.statement.dto.request.EmployeeRequest;
 import com.example.statement.dto.response.EmployeeResponse;
 import com.example.statement.entity.EmployeeEntity;
-import com.example.statement.service.EmployeeService;
+import com.example.statement.service.IEmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+    private final IEmployeeService employeeService;
 
     @GetMapping("/employees")
     public String getAllEmployees(
             Model model,
-            @SessionAttribute ("selectedInstId") Long selectedInstId) {
+            @SessionAttribute ("selectedInstId") Long instId) {
 
-        if (selectedInstId == null) {
-            throw new IllegalArgumentException("Учреждение не выбрано.");
+        if (instId == null) {
+            return "redirect:/";
         }
 
         model.addAttribute("employees",
-                employeeService.getAllActiveEmployeesByInstitutionId(selectedInstId));
+                employeeService.getAllActiveEmployeesByInstitutionId(instId));
         return "employees";
     }
 
@@ -39,13 +39,13 @@ public class EmployeeController {
     @PostMapping("/employees/create")
     public String createEmployee(
             @ModelAttribute EmployeeRequest request,
-            @SessionAttribute ("selectedInstId") Long selectedInstId)
+            @SessionAttribute ("selectedInstId") Long instId)
     {
-        if (selectedInstId == null) {
-            throw new IllegalArgumentException("Учреждение не выбрано.");
+        if (instId == null) {
+            return "redirect:/";
         }
 
-        employeeService.createEmployeeForInstitution(request, selectedInstId);
+        employeeService.createEmployeeForInstitution(request, instId);
         return "redirect:/employees";
     }
 
@@ -62,13 +62,13 @@ public class EmployeeController {
     public String updateEmployee(
             @PathVariable("id") Long id,
             @ModelAttribute EmployeeRequest request,
-            @SessionAttribute ("selectedInstId") Long selectedInstId)
+            @SessionAttribute ("selectedInstId") Long instId)
     {
-        if (selectedInstId == null) {
-            throw new IllegalArgumentException("Учреждение не выбрано.");
+        if (instId == null) {
+            return "redirect:/";
         }
 
-        employeeService.updateEmployee(id,request, selectedInstId);
+        employeeService.updateEmployee(id,request, instId);
         return "redirect:/employees";
     }
 
