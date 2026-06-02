@@ -3,7 +3,7 @@ package com.example.statement.controller;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.service.IEmployeeService;
 import com.example.statement.service.IInstitutionService;
-import com.example.statement.service.query.IPayrollQueryService;
+import com.example.statement.service.IPayrollQueryService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

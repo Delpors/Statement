@@ -1,4 +1,4 @@
-package com.example.statement.service.query;
+package com.example.statement.service;
 
 import com.example.statement.dto.response.DataToCreatePayroll;
 import com.example.statement.dto.response.PayrollItemsResponse;

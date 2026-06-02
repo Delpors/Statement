@@ -1,11 +1,10 @@
-package com.example.statement.service;
+package com.example.statement.util;
 
 import com.example.statement.dto.response.TaxesResponse;
 import com.example.statement.entity.PayrollEntity;
 import com.example.statement.repository.PayrollRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;

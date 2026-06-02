@@ -1,4 +1,4 @@
-package com.example.statement.service.query;
+package com.example.statement.service;
 
 import com.example.statement.dto.response.*;
 import com.example.statement.entity.InstitutionEntity;
@@ -8,7 +8,7 @@ import com.example.statement.repository.EmployeeRepository;
 import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.repository.PayrollRepository;
-import com.example.statement.service.Aggregator;
+import com.example.statement.util.Aggregator;
 import com.example.statement.service.converter.EmployeeConverter;
 import com.example.statement.service.converter.PayrollConverter;
 import com.example.statement.service.converter.PayrollItemConverter;
@@ -24,7 +24,7 @@ import java.util.*;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class PayrollQueryService implements IPayrollQueryService{
+public class PayrollQueryService implements IPayrollQueryService {
 
     private final PayrollRepository payrollRepository;
     private final PayrollItemsRepository payrollItemsRepository;

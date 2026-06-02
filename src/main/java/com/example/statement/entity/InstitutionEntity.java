@@ -28,6 +28,10 @@ public class InstitutionEntity {
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY)
     private List<PayrollEntity> payrolls = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user =  new UserEntity();
+
     @Column(name = "instit_full_name")
     private String institutionFullName;
 

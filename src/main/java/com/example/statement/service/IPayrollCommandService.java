@@ -1,4 +1,4 @@
-package com.example.statement.service.manager;
+package com.example.statement.service;
 
 
 import com.example.statement.dto.request.PayrollItemRequest;

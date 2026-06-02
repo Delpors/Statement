@@ -1,4 +1,4 @@
-package com.example.statement.service.manager;
+package com.example.statement.service;
 
 import com.example.statement.dto.request.PayrollItemRequest;
 import com.example.statement.entity.InstitutionEntity;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PayrollCommandService implements IPayrollCommandService{
+public class PayrollCommandService implements IPayrollCommandService {
 
     private final PayrollRepository payrollRepository;
     private final PayrollItemsRepository payrollItemsRepository;
