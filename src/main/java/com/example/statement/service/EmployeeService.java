@@ -8,11 +8,13 @@ import com.example.statement.exceptions.EmployeeNotFoundException;
 import com.example.statement.repository.EmployeeRepository;
 import com.example.statement.service.converter.EmployeeConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeService implements IEmployeeService{
@@ -44,6 +46,7 @@ public class EmployeeService implements IEmployeeService{
         InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
 
         repository.save(employeeConverter.toSingleEntity(request, institutionEntity));
+        log.info("Employee {} created", request.name());
     }
 
     @Transactional
@@ -65,6 +68,8 @@ public class EmployeeService implements IEmployeeService{
         existingEmpl.setSalary(request.salary());
         existingEmpl.setBankAccount(request.bankAccount());
         existingEmpl.setEmail(request.email());
+
+        log.info("Employee {} updated", existingEmpl.getName());
     }
 
     @Transactional
@@ -75,6 +80,8 @@ public class EmployeeService implements IEmployeeService{
 
         employeeToDelete.softDelete();
         repository.save(employeeToDelete);
+
+        log.info("Employee {} deleted", emplId);
     }
 
     public long getEmployeesCount(Long emplId){

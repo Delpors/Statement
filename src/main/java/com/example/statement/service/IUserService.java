@@ -11,7 +11,7 @@ public interface IUserService {
     UserResponse getUserById(Long userId);
     List<UserResponse> getAllActiveUsers();
     void blockUser(Long userId);
-    void unblockUser(Long userId);
+    void unlockUser(Long userId);
     void deleteUser(Long userId);
-    long getUsersCount(Long userId);
+    long getUsersCount();
 }
