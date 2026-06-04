@@ -2,13 +2,11 @@ package com.example.statement.controller;
 
 import com.example.statement.exceptions.EmployeeNotFoundException;
 import com.example.statement.exceptions.UserNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
