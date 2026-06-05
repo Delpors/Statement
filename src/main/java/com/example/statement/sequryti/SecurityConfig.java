@@ -18,7 +18,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // только для API отключаем
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -43,10 +43,10 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        .loginPage("/login")              // GET запрос для показа формы
-                        .loginProcessingUrl("/login")     // POST запрос для обработки логина
-                        .defaultSuccessUrl("/home", true) // после успешного входа
-                        .failureUrl("/login?error=true")  // при ошибке
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
 
@@ -60,7 +60,7 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session
                         .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
-                        .maximumSessions(1)               // одно устройство на пользователя
+                        .maximumSessions(1)
                         .expiredUrl("/login?expired=true")
                 );
 
