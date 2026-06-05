@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/admin/users")
 public class UserAdminController {
 
     private final UserService userService;
@@ -30,7 +30,7 @@ public class UserAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public String createUser(@ModelAttribute UserRequest request) {
         userService.createUser(request);
-        return "redirect:/api/users";
+        return "redirect:/admin/users";
     }
 
     @GetMapping
@@ -39,16 +39,7 @@ public class UserAdminController {
 
         List<UserResponse> users = userService.getAllActiveUsers();
         model.addAttribute("users", users);
-        return "users";
-    }
-
-    @GetMapping("/count")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String getCountUser(Model model) {
-
-        long count = userService.getUsersCount();
-        model.addAttribute("count", count);
-        return "redirect:/users";
+        return "admin/users/list";
     }
 
     @GetMapping("/{userId}/edit")
@@ -60,7 +51,7 @@ public class UserAdminController {
         return "editUser";
     }
 
-    @DeleteMapping("/{userId}")
+    @PostMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public String deleteUser(@PathVariable Long userId) {
 

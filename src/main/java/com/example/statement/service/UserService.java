@@ -40,6 +40,18 @@ public class UserService implements IUserService{
     }
 
     @Override
+    public UserEntity getUserByUserName(String userName) {
+
+        if(userName == null) {
+            throw new IllegalArgumentException("User name can not be null");
+        }
+
+        return userRepository.getUserEntityByUsername(userName)
+                .orElseThrow(()-> new UserNotFoundException("User not found by username: " + userName));
+
+    }
+
+    @Override
     public List<UserResponse> getAllActiveUsers() {
 
         List<UserEntity> userEntities = userRepository.findAllByIsActiveIsTrue();

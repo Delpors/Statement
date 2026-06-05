@@ -25,15 +25,6 @@ public class UserServiceUtils {
                                 ("User not found by id: " + userId));
     }
 
-    public UserEntity getUserByUserName(String userName) {
 
-        if(userName == null) {
-            throw new IllegalArgumentException("User name can not be null");
-        }
-
-        return userRepository.getUserEntityByUsername(userName)
-                .orElseThrow(()-> new UserNotFoundException("User not found by username: " + userName));
-
-    }
 
 }
