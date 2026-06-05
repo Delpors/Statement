@@ -1,5 +1,6 @@
 package com.example.statement.controller;
 
+import com.example.statement.dto.request.RegisterRequest;
 import com.example.statement.dto.request.UserRequest;
 import com.example.statement.dto.response.UserResponse;
 import com.example.statement.entity.UserEntity;
@@ -28,7 +29,7 @@ public class UserAdminController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String createUser(@ModelAttribute UserRequest request) {
+    public String createUser(@ModelAttribute RegisterRequest request) {
         userService.createUser(request);
         return "redirect:/admin/users";
     }

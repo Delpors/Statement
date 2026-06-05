@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -23,17 +24,18 @@ public class UserEntity {
     @Column(name = "user_name", unique = true)
     private String username;
 
-    @Column(name = "full_name")
-    private String fullName;
-
     @Column(name = "password")
     private String password;
+
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "enail", unique = true)
     private String email;
 
     @Column(name = "role", nullable = false)
-    private UserRole role;
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> role;
 
     @Column(name = "created_at")
     private LocalDateTime created;

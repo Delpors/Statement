@@ -1,5 +1,6 @@
 package com.example.statement.service;
 
+import com.example.statement.dto.request.RegisterRequest;
 import com.example.statement.dto.request.UserRequest;
 import com.example.statement.dto.response.UserResponse;
 import com.example.statement.entity.UserEntity;
@@ -25,7 +26,7 @@ public class UserService implements IUserService{
 
     @Override
     @Transactional
-    public void createUser(UserRequest request) {
+    public void createUser(RegisterRequest request) {
 
         UserEntity userEntity = userMapper.toEntity(request);
         userRepository.save(userEntity);
@@ -94,5 +95,15 @@ public class UserService implements IUserService{
     public long getUsersCount() {
 
         return userRepository.count();
+    }
+
+    @Override
+    public boolean isEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean isUsernameExists(String s) {
+        return userRepository.existsByUsername(s);
     }
 }

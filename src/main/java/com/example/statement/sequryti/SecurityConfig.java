@@ -15,41 +15,38 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
                                 "/login",
+                                "/register",
                                 "/login-error",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/webjars/**"
                         ).permitAll()
-
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/institutions/create/**").hasRole("ADMIN")
-
                         .requestMatchers("/employees/**").hasAnyRole("ADMIN", "OPERATOR")
                         .requestMatchers("/payroll/**").hasAnyRole("ADMIN", "OPERATOR")
                         .requestMatchers("/report/**").hasAnyRole("ADMIN", "OPERATOR")
-
                         .anyRequest().authenticated()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler(authenticationSuccessHandler)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
@@ -57,7 +54,6 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-
                 .sessionManagement(session -> session
                         .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
                         .maximumSessions(1)
@@ -70,13 +66,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            request.getSession().setAttribute("userLoginTime", System.currentTimeMillis());
-            response.sendRedirect("/home");
-        };
     }
 }

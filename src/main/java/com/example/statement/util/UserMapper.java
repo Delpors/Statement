@@ -1,6 +1,6 @@
 package com.example.statement.util;
 
-import com.example.statement.dto.request.UserRequest;
+import com.example.statement.dto.request.RegisterRequest;
 import com.example.statement.dto.response.UserResponse;
 import com.example.statement.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -27,21 +27,17 @@ public class UserMapper {
         );
     }
 
-    public UserEntity toEntity(UserRequest userRequest) {
+    public UserEntity toEntity(RegisterRequest userRequest) {
 
         if (userRequest == null) return null;
 
-        return new UserEntity(
-                null,
-                userRequest.userName(),
-                userRequest.password(),
-                userRequest.email(),
-                userRequest.role(),
-                userRequest.createdAt(),
-                userRequest.deletedAt(),
-                null,
-                userRequest.isActive()
-        );
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(userRequest.userName());
+        userEntity.setPassword(userRequest.password());
+        userEntity.setEmail(userRequest.email());
+
+        return userEntity;
+
     }
 
     public List<UserResponse> toListDTO(List<UserEntity> userEntityList) {
