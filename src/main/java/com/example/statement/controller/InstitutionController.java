@@ -9,6 +9,7 @@ import com.example.statement.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,10 +40,8 @@ public class InstitutionController {
     }
 
     @PostMapping("/create")
-    public String createInstitution(@ModelAttribute InstitutionRequest request, Authentication authentication){
-
-        String username = authentication.getName();
-        UserEntity user = userService.getUserByUserName(username);
+    public String createInstitution(@ModelAttribute InstitutionRequest request,
+                                    @AuthenticationPrincipal UserEntity user){
 
         institutionService.createInstitution(request, user);
         return "redirect:/institutions";
@@ -51,20 +50,19 @@ public class InstitutionController {
     @PostMapping("/update/{id}")
     public String updateInstitution(@PathVariable Long id,
                                     @ModelAttribute InstitutionRequest request,
-                                    Authentication authentication){
-
-        String username = authentication.getName();
-        UserEntity user = userService.getUserByUserName(username);
+                                    @AuthenticationPrincipal UserEntity user){
 
         institutionService.updateInstitution(id, request, user);
         return "redirect:/institutions";
     }
 
     @GetMapping()
-    public String getAllInstitutions(Model model){
+    public String getAllInstitutions(Model model,
+                                     @AuthenticationPrincipal UserEntity user){
+
         model.addAttribute
                 ("institutions",
-                        institutionService.getAllInstitutions());
+                        institutionService.getAllInstitutions(user));
         return "institutions";
     }
 

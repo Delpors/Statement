@@ -67,9 +67,9 @@ public class InstitutionService implements IInstitutionService{
         return new InstitutionConverter().toSingleResponse(institutionEntity);
     }
 
-    public List<InstitutionResponse> getAllInstitutions(){
+    public List<InstitutionResponse> getAllInstitutions(UserEntity user){
 
-        List<InstitutionEntity> existInstitutions = instRepository.findAll();
+        List<InstitutionEntity> existInstitutions = instRepository.findAllByUser(user);
         return institutionConverter.toResponse(existInstitutions);
     }
 

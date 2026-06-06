@@ -24,9 +24,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-person-circle me-1"></i> Выход
-                    </a>
+                    <form th:action="@{/logout}" method="post" id="logoutForm">
+                        <button type="submit" class="btn btn-link nav-link">
+                            <i class="bi bi-person-circle me-1"></i> Выход
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>
