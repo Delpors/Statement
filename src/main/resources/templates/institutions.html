@@ -8,31 +8,7 @@
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand">
-            <i class="bi bi-building me-2"></i>
-            ВОС
-            <span th:if="${selectedInstitution != null}"
-                  class="badge bg-light text-dark ms-2"
-                  th:text="${selectedInstitution.institutionAbbrev}">
-            </span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/home}"><i class="bi bi-house me-1"></i> Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/login}"><i class="bi bi-person-circle me-1"></i> Выход</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{navbar :: navbar}"></div>
 <div class="container-fluid mt-4">
     <div class="text-center mb-4">
         <h1 class="display-5">Организации</h1>
