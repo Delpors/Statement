@@ -5,6 +5,7 @@ import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
 import com.example.statement.service.IInstitutionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

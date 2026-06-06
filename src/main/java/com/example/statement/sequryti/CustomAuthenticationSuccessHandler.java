@@ -17,6 +17,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         request.getSession().setAttribute("userLoginTime", System.currentTimeMillis());
-        response.sendRedirect("/home");
+        response.sendRedirect("/");
     }
 }
