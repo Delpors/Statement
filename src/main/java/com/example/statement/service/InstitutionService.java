@@ -3,9 +3,11 @@ package com.example.statement.service;
 import com.example.statement.dto.request.InstitutionRequest;
 import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
+import com.example.statement.entity.UserEntity;
 import com.example.statement.repository.InstitutionRepository;
 import com.example.statement.service.converter.InstitutionConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +21,14 @@ public class InstitutionService implements IInstitutionService{
     private final InstitutionRepository instRepository;
     private final InstitutionConverter institutionConverter;
 
-    public void createInstitution(InstitutionRequest request) {
-        instRepository.save(institutionConverter.toEntity(null,request));
+    public void createInstitution(InstitutionRequest request, UserEntity user) {
+        instRepository.save(institutionConverter.toEntity(null,request, user));
     }
 
     @Transactional
-    public void updateInstitution(Long id, InstitutionRequest request) {
+    public void updateInstitution(Long id, InstitutionRequest request, UserEntity user) {
 
-        InstitutionEntity inst = new InstitutionConverter().toEntity(id,request);
+        InstitutionEntity inst = new InstitutionConverter().toEntity(id,request, user);
 
         InstitutionEntity existInst = instRepository
                 .findById(id)

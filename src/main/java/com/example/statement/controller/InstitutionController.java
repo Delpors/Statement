@@ -3,9 +3,12 @@ package com.example.statement.controller;
 import com.example.statement.dto.request.InstitutionRequest;
 import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
+import com.example.statement.entity.UserEntity;
 import com.example.statement.service.IInstitutionService;
+import com.example.statement.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class InstitutionController {
 
     private final IInstitutionService institutionService;
+    private final IUserService userService;
 
     @GetMapping("/create")
     public String showCreatInstForm(Model model){
@@ -35,16 +39,24 @@ public class InstitutionController {
     }
 
     @PostMapping("/create")
-    public String createInstitution(@ModelAttribute InstitutionRequest request, BindingResult bindingResult){
+    public String createInstitution(@ModelAttribute InstitutionRequest request, Authentication authentication){
 
-        institutionService.createInstitution(request);
+        String username = authentication.getName();
+        UserEntity user = userService.getUserByUserName(username);
+
+        institutionService.createInstitution(request, user);
         return "redirect:/institutions";
     }
 
     @PostMapping("/update/{id}")
-    public String updateInstitution(@PathVariable Long id, @ModelAttribute InstitutionRequest request){
+    public String updateInstitution(@PathVariable Long id,
+                                    @ModelAttribute InstitutionRequest request,
+                                    Authentication authentication){
 
-        institutionService.updateInstitution(id, request);
+        String username = authentication.getName();
+        UserEntity user = userService.getUserByUserName(username);
+
+        institutionService.updateInstitution(id, request, user);
         return "redirect:/institutions";
     }
 

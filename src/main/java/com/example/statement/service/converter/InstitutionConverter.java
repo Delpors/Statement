@@ -3,6 +3,7 @@ package com.example.statement.service.converter;
 import com.example.statement.dto.request.InstitutionRequest;
 import com.example.statement.dto.response.InstitutionResponse;
 import com.example.statement.entity.InstitutionEntity;
+import com.example.statement.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,13 +33,13 @@ public class InstitutionConverter {
         );
     }
 
-    public InstitutionEntity toEntity(Long id, InstitutionRequest instDTO){
+    public InstitutionEntity toEntity(Long id, InstitutionRequest instDTO, UserEntity user){
         return new InstitutionEntity(
                 id,
                 null,
                 null,
                 null,
-                null,
+                user,
                 instDTO.institutionFullName(),
                 instDTO.institutionAbbrev(),
                 instDTO.director(),
