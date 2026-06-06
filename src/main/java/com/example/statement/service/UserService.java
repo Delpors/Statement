@@ -7,6 +7,7 @@ import com.example.statement.entity.UserEntity;
 import com.example.statement.exceptions.UserNotFoundException;
 import com.example.statement.repository.UserRepository;
 import com.example.statement.util.UserMapper;
+import com.example.statement.util.UserRole;
 import com.example.statement.util.UserServiceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,12 @@ public class UserService implements IUserService{
     @Transactional
     public void createUser(RegisterRequest request) {
 
-        UserEntity userEntity = userMapper.toEntity(request);
+        boolean isFirstUser = userRepository.count() == 0;
+        UserRole role = isFirstUser ? UserRole.ADMIN : UserRole.USER;
+
+        UserEntity userEntity = userMapper.toEntity(request, role);
         userRepository.save(userEntity);
-        log.info("User {} created", request.userName());
+        log.info("Пользователь {} создан", request.getUserName());
     }
 
     @Override
@@ -44,11 +48,11 @@ public class UserService implements IUserService{
     public UserEntity getUserByUserName(String userName) {
 
         if(userName == null) {
-            throw new IllegalArgumentException("User name can not be null");
+            throw new IllegalArgumentException("Имя пользователя не может быть пустым");
         }
 
         return userRepository.getUserEntityByUsername(userName)
-                .orElseThrow(()-> new UserNotFoundException("User not found by username: " + userName));
+                .orElseThrow(()-> new UserNotFoundException("Не найден пользователь с именем: " + userName));
 
     }
 
@@ -66,7 +70,7 @@ public class UserService implements IUserService{
 
         UserEntity user = userServiceUtils.getUserBiIdOrThrow(userId);
         user.setActive(false);
-        log.info("User {} blocked", userId);
+        log.info("Пользователь {} заблокирован", userId);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class UserService implements IUserService{
 
         UserEntity user = userServiceUtils.getUserBiIdOrThrow(userId);
         user.setActive(true);
-        log.info("User {} unblocked", userId);
+        log.info("Пользователь {} разблокирован", userId);
     }
 
     @Override
@@ -85,10 +89,10 @@ public class UserService implements IUserService{
         if (userRepository.existsById(userId)){
             userRepository.deleteById(userId);
         }else {
-            throw new UserNotFoundException("User not found by id: " + userId);
+            throw new UserNotFoundException("Не найден пользователь с id: " + userId);
         };
 
-        log.info("User {} deleted", userId);
+        log.info("Пользователь {} удален", userId);
     }
 
     @Override

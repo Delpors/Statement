@@ -3,15 +3,11 @@ package com.example.statement.sequryti;
 import com.example.statement.entity.UserEntity;
 import com.example.statement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,15 +18,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.getUserEntityByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Пользователь не найден: " + username));
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .disabled(!user.isActive())
-                .authorities(user.getRole().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                        .collect(Collectors.toList()))
+                .authorities(user.getRole().getValue())
                 .build();
     }
 }

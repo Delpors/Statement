@@ -27,15 +27,12 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "full_name")
-    private String fullName;
-
     @Column(name = "enail", unique = true)
     private String email;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> role;
+    private UserRole role;
 
     @Column(name = "created_at")
     private LocalDateTime created;

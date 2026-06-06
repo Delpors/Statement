@@ -1,5 +1,8 @@
 package com.example.statement.util;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRole {
 
     ADMIN("ADMIN"),
@@ -11,7 +14,4 @@ public enum UserRole {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
 }

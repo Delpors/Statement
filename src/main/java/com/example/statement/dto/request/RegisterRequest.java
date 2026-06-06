@@ -2,13 +2,16 @@ package com.example.statement.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
-public record RegisterRequest(
-        @NotBlank String userName,
-        @NotBlank String confirmPassword,
-        @NotBlank String password,
-        @NotBlank String fullName,
-        @NotBlank @Email String email
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class RegisterRequest {
 
-) {
+    private  @NotBlank String userName;
+    private  @NotBlank String confirmPassword;
+    private  @NotBlank String password;
+    private  @NotBlank @Email String email;
 }

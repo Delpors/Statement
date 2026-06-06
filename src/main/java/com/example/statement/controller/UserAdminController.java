@@ -31,7 +31,7 @@ public class UserAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public String createUser(@ModelAttribute RegisterRequest request) {
         userService.createUser(request);
-        return "redirect:/admin/users";
+        return "redirect:/admin/users/list";
     }
 
     @GetMapping
@@ -40,7 +40,7 @@ public class UserAdminController {
 
         List<UserResponse> users = userService.getAllActiveUsers();
         model.addAttribute("users", users);
-        return "admin/users/list";
+        return "userlist";
     }
 
     @GetMapping("/{userId}/edit")
@@ -57,7 +57,7 @@ public class UserAdminController {
     public String deleteUser(@PathVariable Long userId) {
 
         userService.deleteUser(userId);
-        return "redirect:/api/users";
+        return "redirect:/admin/users/list";
     }
 
     @PostMapping("/{userId}/block")
@@ -65,7 +65,7 @@ public class UserAdminController {
     public String blockUser(@PathVariable Long userId) {
 
         userService.blockUser(userId);
-        return "redirect:/api/users";
+        return "redirect:/admin/users/list";
     }
 
     @PostMapping("/{userId}/unlock")
@@ -73,6 +73,6 @@ public class UserAdminController {
     public String unlockUser(@PathVariable Long userId) {
 
         userService.unlockUser(userId);
-        return "redirect:/api/users";
+        return "redirect:/admin/users/list";
     }
 }
