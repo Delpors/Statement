@@ -16,5 +16,5 @@ public interface IPayrollQueryService {
     List<PayrollResponse> getAllPayrolls (Long instId);
     List<DataToCreatePayroll> getIEmployeeItems(Long instId);
     Page<ReportResponse> getEmployeesYearSalary(Integer year, Long institutionId, Pageable pageable);
-    long getCount(InstitutionEntity institution);
+    long getCount(Long institution);
 }

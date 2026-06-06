@@ -84,8 +84,8 @@ public class EmployeeService implements IEmployeeService{
         log.info("Employee {} deleted", emplId);
     }
 
-    public long getEmployeesCount(Long emplId){
-        return repository.countAllByInstitutionAndActiveTrue(emplId);
+    public long getEmployeesCount(Long instId){
+        return repository.countAllByInstitutionAndActiveTrue(instId);
     }
 }
 

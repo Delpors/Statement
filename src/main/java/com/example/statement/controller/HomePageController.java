@@ -40,12 +40,10 @@ public class HomePageController {
 
     @GetMapping("/home")
     public String homePage(Model model,
-                           @SessionAttribute("selectedInstId") Long institutionId){
+                           @SessionAttribute("selectedInstId") Long instId){
 
-        InstitutionEntity institution = institutionService.getInstitutionEntityById(institutionId);
-
-        model.addAttribute("EmployeeCount", employeeService.getEmployeesCount(institutionId));
-        model.addAttribute("PayrollCount", payrollQueryService.getCount(institution));
+        model.addAttribute("EmployeeCount", employeeService.getEmployeesCount(instId));
+        model.addAttribute("PayrollCount", payrollQueryService.getCount(instId));
 
         return "home";
     }

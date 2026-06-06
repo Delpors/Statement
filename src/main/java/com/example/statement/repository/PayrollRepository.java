@@ -24,7 +24,8 @@ public interface PayrollRepository extends JpaRepository<PayrollEntity, Long> {
     @NotNull
     List<PayrollEntity> findAllByYearAndInstitution_id(Integer year, Long institutionId);
 
-    long countAllByInstitution(InstitutionEntity institution);
+    @Query("SELECT e FROM PayrollEntity e WHERE e.institution.id = :institutionId")
+    long countAllByInstitution(@Param("institutionId") Long institutionId);
 
 
 }

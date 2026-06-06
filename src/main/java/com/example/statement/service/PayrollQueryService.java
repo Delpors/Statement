@@ -79,8 +79,8 @@ public class PayrollQueryService implements IPayrollQueryService {
         return  Aggregator.payrollItems(yearSalaryResponse, pageable);
     }
 
-    public long getCount(InstitutionEntity institution)
+    public long getCount(Long instId)
     {
-        return payrollRepository.countAllByInstitution(institution);
+        return payrollRepository.countAllByInstitution(instId);
     }
 }
