@@ -38,7 +38,7 @@ public class AuthController {
         }
 
         if (userService.isUsernameExists(request.getUserName())) {
-            result.rejectValue("username", "error.username", "Пользователь с таким именем уже существует");
+            result.rejectValue("userName", "error.username", "Пользователь с таким именем уже существует");
         }
 
         if (result.hasErrors()) {
@@ -61,9 +61,7 @@ public class AuthController {
 
         if (logout != null) {
             model.addAttribute("message", "Вы успешно вышли из системы");
-        }
-
-        if (registered != null) {
+        } else if (registered != null) {
             model.addAttribute("message", "Регистрация успешна! Войдите в систему");
         }
 

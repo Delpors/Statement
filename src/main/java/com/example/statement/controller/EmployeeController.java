@@ -15,10 +15,10 @@ public class EmployeeController {
 
     private final IEmployeeService employeeService;
 
-    @GetMapping("/employees")
+    @GetMapping("/employees/list")
     public String getAllEmployees(
             Model model,
-            @SessionAttribute ("selectedInstId") Long instId) {
+            @SessionAttribute (value = "selectedInstId", required = false) Long instId) {
 
         if (instId == null) {
             return "redirect:/";
@@ -39,14 +39,14 @@ public class EmployeeController {
     @PostMapping("/employees/create")
     public String createEmployee(
             @ModelAttribute EmployeeRequest request,
-            @SessionAttribute ("selectedInstId") Long instId)
+            @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
         if (instId == null) {
             return "redirect:/";
         }
 
         employeeService.createEmployeeForInstitution(request, instId);
-        return "redirect:/employees";
+        return "redirect:/employees/list";
     }
 
     @GetMapping("/employees/edit/{id}")
@@ -62,20 +62,20 @@ public class EmployeeController {
     public String updateEmployee(
             @PathVariable("id") Long id,
             @ModelAttribute EmployeeRequest request,
-            @SessionAttribute ("selectedInstId") Long instId)
+            @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
         if (instId == null) {
             return "redirect:/";
         }
 
         employeeService.updateEmployee(id,request, instId);
-        return "redirect:/employees";
+        return "redirect:/employees/list";
     }
 
     @DeleteMapping("/employees/{id}")
     public String deleteEmployee(@PathVariable Long id)
     {
         employeeService.deleteEmployee(id);
-        return "redirect:/employees";
+        return "redirect:/employees/list";
     }
 }
