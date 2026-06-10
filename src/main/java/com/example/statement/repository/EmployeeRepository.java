@@ -20,6 +20,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
     List<EmployeeEntity> findActiveByInstId(@Param("instId") Long instId);
 
     @Query("SELECT count (e) FROM EmployeeEntity e WHERE e.institution.id = :instId AND e.active = true ")
-    long countAllByInstitutionAndActiveTrue(@Param("instId") Long instId);
+    Optional<Long> countAllByInstitutionAndActiveTrue(@Param("instId") Long instId);
 }
 

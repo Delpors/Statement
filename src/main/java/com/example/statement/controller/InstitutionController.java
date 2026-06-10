@@ -7,11 +7,9 @@ import com.example.statement.entity.UserEntity;
 import com.example.statement.service.IInstitutionService;
 import com.example.statement.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -41,6 +39,7 @@ public class InstitutionController {
     @PostMapping("/create")
     public String createInstitution(@ModelAttribute InstitutionRequest request, Authentication authentication){
 
+
         String username = authentication.getName();
         UserEntity user = userService.getUserByUserName(username);
 
@@ -52,6 +51,7 @@ public class InstitutionController {
     public String updateInstitution(@PathVariable Long id,
                                     @ModelAttribute InstitutionRequest request,
                                     Authentication authentication){
+
 
         UserEntity user = userService.getUserByUserName(authentication.getName());
 

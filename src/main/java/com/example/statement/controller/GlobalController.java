@@ -15,7 +15,7 @@ public class GlobalController {
     private final IInstitutionService institutionService;
 
     @ModelAttribute
-    private void addInstitutionToModel(HttpSession session, Model model){
+    public void addInstitutionToModel(HttpSession session, Model model){
 
         Long selectedInstId = (Long) session.getAttribute("selectedInstId");
 

@@ -85,7 +85,7 @@ public class EmployeeService implements IEmployeeService{
     }
 
     public long getEmployeesCount(Long instId){
-        return repository.countAllByInstitutionAndActiveTrue(instId);
+        return repository.countAllByInstitutionAndActiveTrue(instId).orElseGet(()->0L);
     }
 }
 
