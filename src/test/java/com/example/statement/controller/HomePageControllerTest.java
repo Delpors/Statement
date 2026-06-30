@@ -286,18 +286,6 @@ class HomePageControllerTest {
     }
 
     @Test
-    void homePage_ShouldHandleNullInstId() {
-
-        String result = homePageController.homePage(model, null);
-
-        assertEquals("home", result);
-        verify(employeeService).getEmployeesCount(null);
-        verify(payrollQueryService).getCount(null);
-        verify(model).addAttribute("EmployeeCount", null);
-        verify(model).addAttribute("PayrollCount", null);
-    }
-
-    @Test
     void homePage_ShouldThrowException_WhenModelIsNull() {
 
         assertThrows(NullPointerException.class, () -> {

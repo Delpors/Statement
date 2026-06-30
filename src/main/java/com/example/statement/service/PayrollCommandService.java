@@ -9,6 +9,7 @@ import com.example.statement.repository.PayrollItemsRepository;
 import com.example.statement.repository.PayrollRepository;
 import com.example.statement.service.converter.PayrollItemConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PayrollCommandService implements IPayrollCommandService {
@@ -35,7 +37,6 @@ public class PayrollCommandService implements IPayrollCommandService {
     public void createOrUpdatePayroll(
             List<PayrollItemRequest> requests,
             Long institutionId){
-
 
         InstitutionEntity institution = institutionRepository.findById(institutionId).
                 orElseThrow(()->new NoSuchElementException("Не найдена организация с id: " + institutionId));
@@ -56,6 +57,7 @@ public class PayrollCommandService implements IPayrollCommandService {
                 });
 
         payrollRepository.save(payroll);
+        log.debug("Сведения платежной ведомости за {}, успешно сохранены.", payroll.getPaymentDate());
     }
 
     public PayrollEntity createPayroll(
@@ -63,7 +65,7 @@ public class PayrollCommandService implements IPayrollCommandService {
             List<PayrollItemsEntity> items,
             InstitutionEntity institution)
     {
-        System.out.println("Создаем ведомость");
+        log.info("Попытка создать расчетно-платежную ведомость за {}", payrollDate);
         PayrollEntity payroll = new PayrollEntity();
 
         payroll.setMonth(items.getFirst().getMonth());
@@ -80,6 +82,8 @@ public class PayrollCommandService implements IPayrollCommandService {
     public void updatePayrollItems(
             PayrollEntity payroll,
             List<PayrollItemsEntity> newEntities) {
+
+        log.info("Попытка обновить расчетно-платежную ведомость за {}", payroll.getPaymentDate());
 
         Function<PayrollItemsEntity, String> keyFunc = entity ->
                 entity.getEmployee().getId() + "_" + entity.getPaymentDate();
@@ -133,15 +137,22 @@ public class PayrollCommandService implements IPayrollCommandService {
     @Transactional
     public void deletePayrollItem(Long id){
 
+        log.info("Попытка удалить строку расчетно-платежной ведомость с id: {}", id);
+
         try {
             payrollItemsRepository.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             throw new NoSuchElementException("Не найдена строка в ведомости с id: "+id);
         }
+        log.debug("Строка в расчетно-платежной ведомость с id: {}, успешно удалена.", id);
+
     }
 
     @Transactional
     public void deletePayroll(Long id){
+
+        log.info("Попытка удалить расчетно-платежную ведомость с id: {}", id);
         payrollRepository.deleteById(id);
+        log.debug("Расчетно-платежная ведомость с id: {}, успешно удалена", id);
     }
 }

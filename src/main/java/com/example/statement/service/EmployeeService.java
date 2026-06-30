@@ -39,6 +39,8 @@ public class EmployeeService implements IEmployeeService{
     @Transactional
     public void createEmployeeForInstitution(EmployeeRequest request, Long instId) {
 
+        log.info("Попытка создать сотрудника {}", request.name());
+
         if (request==null){
             throw new IllegalArgumentException("Сведения о сотруднике не могут быть пустыми");
         }
@@ -46,11 +48,13 @@ public class EmployeeService implements IEmployeeService{
         InstitutionEntity institutionEntity = institutionService.getInstitutionEntityById(instId);
 
         repository.save(employeeConverter.toSingleEntity(request, institutionEntity));
-        log.info("Employee {} created", request.name());
+        log.debug("Пользователь {} успешно создан", request.name());
     }
 
     @Transactional
     public void updateEmployee(Long emplId, EmployeeRequest request, Long instId) {
+
+        log.info("Попытка обновить сведения сотрудника с id: {}",emplId);
 
         if (request==null){
             throw new IllegalArgumentException("Сведения о сотруднике не могут быть пустыми");
@@ -69,11 +73,13 @@ public class EmployeeService implements IEmployeeService{
         existingEmpl.setBankAccount(request.bankAccount());
         existingEmpl.setEmail(request.email());
 
-        log.info("Employee {} updated", existingEmpl.getName());
+        log.debug("Сведения о сотруднике {} обновлены", existingEmpl.getName());
     }
 
     @Transactional
     public void deleteEmployee(Long emplId) {
+
+        log.info("Попытка удалить сотрудника из базы с id: {}",emplId);
 
         EmployeeEntity employeeToDelete = repository.findById(emplId)
                 .orElseThrow(()-> new EmployeeNotFoundException("Сотрудник не найден"));
@@ -81,10 +87,11 @@ public class EmployeeService implements IEmployeeService{
         employeeToDelete.softDelete();
         repository.save(employeeToDelete);
 
-        log.info("Employee {} deleted", emplId);
+        log.info("Сотрудник с id: {} удален", emplId);
     }
 
-    public long getEmployeesCount(Long instId){
+    public Long getEmployeesCount(Long instId){
+
         return repository.countAllByInstitutionAndActiveTrue(instId).orElseGet(()->0L);
     }
 }

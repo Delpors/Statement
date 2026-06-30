@@ -29,12 +29,14 @@ public class UserService implements IUserService{
     @Transactional
     public void createUser(RegisterRequest request) {
 
+        log.info("Попытка создания нового пользователя {}.", request.getUserName());
+
         boolean isFirstUser = userRepository.count() == 0;
         UserRole role = isFirstUser ? UserRole.ADMIN : UserRole.USER;
-
         UserEntity userEntity = userMapper.toEntity(request, role);
         userRepository.save(userEntity);
-        log.info("Пользователь {} создан", request.getUserName());
+
+        log.debug("Пользователь {} создан", request.getUserName());
     }
 
     @Override
@@ -68,15 +70,17 @@ public class UserService implements IUserService{
     @Transactional
     public void blockUser(Long userId) {
 
+        log.info("Попытка заблокировать пользователя с id: {} ", userId);
         UserEntity user = userServiceUtils.getUserBiIdOrThrow(userId);
         user.setActive(false);
-        log.info("Пользователь {} заблокирован", userId);
+        log.info("Пользователь c id: {}, успешно заблокирован", userId);
     }
 
     @Override
     @Transactional
     public void unlockUser(Long userId) {
 
+        log.info("Попытка разблокировать пользователя с id: {} ", userId);
         UserEntity user = userServiceUtils.getUserBiIdOrThrow(userId);
         user.setActive(true);
         log.info("Пользователь {} разблокирован", userId);
@@ -86,6 +90,7 @@ public class UserService implements IUserService{
     @Transactional
     public void deleteUser(Long userId) {
 
+        log.info("Попытка удалить пользователя с id: {} ", userId);
         if (userRepository.existsById(userId)){
             userRepository.deleteById(userId);
         }else {

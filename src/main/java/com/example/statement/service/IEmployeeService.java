@@ -12,5 +12,5 @@ public interface IEmployeeService {
     void createEmployeeForInstitution(EmployeeRequest request, Long instId);
     void updateEmployee(Long emplId, EmployeeRequest request, Long instId);
     void deleteEmployee(Long emplId);
-    long getEmployeesCount(Long instId);
+    Long getEmployeesCount(Long instId);
 }

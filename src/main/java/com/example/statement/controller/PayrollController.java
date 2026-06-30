@@ -42,9 +42,9 @@ public class PayrollController {
     }
     
     @GetMapping("/payrollItems/create")
-    public String showPayrollItemsCreateForm(Model model, HttpSession session)
+    public String showPayrollItemsCreateForm(Model model,
+                                             @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
-        Long instId = (Long) session.getAttribute("selectedInstId");
 
         model.addAttribute("items", payrollQueryService.getIEmployeeItems(instId));
 
@@ -53,9 +53,8 @@ public class PayrollController {
 
     @PostMapping("/payrollItems/create")
     public String createPayrollItems(@RequestBody List<PayrollItemRequest> requests,
-                                     HttpSession session)
+                                     @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
-        Long instId = (Long) session.getAttribute("selectedInstId");
         if (instId==null){
             throw new IllegalStateException("Организация не выбрана!");
         }
@@ -70,12 +69,13 @@ public class PayrollController {
     public String showPayrollItems(
             @PathVariable Long payrollId,
             @ModelAttribute PayrollPageableParams params,
-            Model model, HttpSession session)
+            Model model,
+            @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
 
         Pageable pageable = params.getPageable();
 
-        setupPayrollData(model, payrollId, session, pageable);
+        setupPayrollData(model, payrollId, instId, pageable);
         return "payrollItems";
     }
 
@@ -83,11 +83,12 @@ public class PayrollController {
     public String showPayrollItemsEditForm(
             @PathVariable Long payrollId,
             @ModelAttribute PayrollPageableParams params,
-            Model model, HttpSession session)
+            Model model,
+            @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
 
         Pageable pageable = params.getPageable();
-        setupPayrollData(model, payrollId, session, pageable);
+        setupPayrollData(model, payrollId, instId, pageable);
         return "editPayrollItems";
     }
 
@@ -103,12 +104,10 @@ public class PayrollController {
     }
 
     private void setupPayrollData(Model model, Long payrollId,
-                                  HttpSession session, Pageable pageable)
+                                  Long instId, Pageable pageable)
     {
 
-        Long selectedInst = (Long) session.getAttribute("selectedInstId");
-
-        Page<PayrollItemsResponse> payrollPage = payrollQueryService.getPayrollItems(payrollId, selectedInst, pageable);
+        Page<PayrollItemsResponse> payrollPage = payrollQueryService.getPayrollItems(payrollId, instId, pageable);
 
         model.addAttribute("payroll_items", payrollPage.getContent());
         model.addAttribute("currentPage", payrollPage.getNumber());
