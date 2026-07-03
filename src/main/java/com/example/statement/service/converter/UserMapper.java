@@ -1,8 +1,9 @@
-package com.example.statement.util;
+package com.example.statement.service.converter;
 
 import com.example.statement.dto.request.RegisterRequest;
 import com.example.statement.dto.response.UserResponse;
 import com.example.statement.entity.UserEntity;
+import com.example.statement.util.UserRole;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

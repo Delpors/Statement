@@ -26,22 +26,22 @@ public class PayrollEntity {
     private List<PayrollItemsEntity> items = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instId")
+    @JoinColumn(name = "inst_id")
     private InstitutionEntity institution;
 
-    @Column(name = "totalIncome")
+    @Column(name = "total_income")
     private BigDecimal totalIncome;
 
-    @Column(name = "totalUnionFee")
+    @Column(name = "total_union_fee")
     private BigDecimal totalUnionFee;
 
-    @Column(name = "totalIncomeTax")
+    @Column(name = "total_income_tax")
     private BigDecimal totalIncomeTax;
 
-    @Column(name = "totalAdvance")
+    @Column(name = "total_advance")
     private BigDecimal totalAdvance;
 
-    @Column(name = "totalIssued")
+    @Column(name = "total_issued")
     private BigDecimal totalIssued;
 
     @Column(name = "month")
@@ -53,10 +53,10 @@ public class PayrollEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "payrollData")
+    @Column(name = "payroll_data")
     private LocalDate paymentDate;
 
     @PrePersist

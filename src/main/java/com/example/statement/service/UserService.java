@@ -1,12 +1,11 @@
 package com.example.statement.service;
 
 import com.example.statement.dto.request.RegisterRequest;
-import com.example.statement.dto.request.UserRequest;
 import com.example.statement.dto.response.UserResponse;
 import com.example.statement.entity.UserEntity;
 import com.example.statement.exceptions.UserNotFoundException;
 import com.example.statement.repository.UserRepository;
-import com.example.statement.util.UserMapper;
+import com.example.statement.service.converter.UserMapper;
 import com.example.statement.util.UserRole;
 import com.example.statement.util.UserServiceUtils;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,5 @@
-package com.example.statement.controller;
+package com.example.statement.exceptions;
 
-import com.example.statement.exceptions.EmployeeNotFoundException;
-import com.example.statement.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

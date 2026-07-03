@@ -19,20 +19,20 @@ public class PayrollItemsEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employeeId")
+    @JoinColumn(name = "employee_id")
     private EmployeeEntity employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "peurollId")
+    @JoinColumn(name = "payroll_id")
     private PayrollEntity payroll;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instId")
+    @JoinColumn(name = "inst_id")
     private InstitutionEntity institution;
 
     //Начисление
 
-    @Column(name = "base_Salary")//Премии
+    @Column(name = "base_salary")//Премии
     private BigDecimal baseSalary;
 
     @Column(name = "bonus")//Премии

@@ -26,7 +26,7 @@ public class EmployeeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Instid")
+    @JoinColumn(name = "inst_id")
     private InstitutionEntity institution;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -51,7 +51,7 @@ public class EmployeeEntity {
     @Column(name = "salary")
     private BigDecimal salary;
 
-    @Column(name = "bankaccount")
+    @Column(name = "bank_account")
     private String bankAccount;
 
     @Column(name = "email")

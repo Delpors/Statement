@@ -1,0 +1,286 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tables
+      author: Sabir
+      comment: "Создание всех таблиц без внешних ключей"
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_name
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+
+        - createTable:
+            tableName: institution
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: instit_full_name
+                  type: VARCHAR(255)
+              - column:
+                  name: instit_abbrev
+                  type: VARCHAR(100)
+              - column:
+                  name: director
+                  type: VARCHAR(255)
+              - column:
+                  name: gen_accountant
+                  type: VARCHAR(255)
+              - column:
+                  name: accountant
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: employees
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: inst_id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: surname
+                  type: VARCHAR(255)
+              - column:
+                  name: lastname
+                  type: VARCHAR(255)
+              - column:
+                  name: position
+                  type: VARCHAR(255)
+              - column:
+                  name: nontaxable
+                  type: DECIMAL(19,2)
+              - column:
+                  name: salary
+                  type: DECIMAL(19,2)
+              - column:
+                  name: bank_account
+                  type: VARCHAR(50)
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: deleted_at
+                  type: DATE
+
+        - createTable:
+            tableName: payroll
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: inst_id
+                  type: BIGINT
+              - column:
+                  name: total_income
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_union_fee
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_income_tax
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_advance
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_issued
+                  type: DECIMAL(19,2)
+              - column:
+                  name: month
+                  type: INTEGER
+              - column:
+                  name: year
+                  type: INTEGER
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: payroll_data
+                  type: DATE
+
+        - createTable:
+            tableName: payroll_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: employee_id
+                  type: BIGINT
+              - column:
+                  name: payroll_id
+                  type: BIGINT
+              - column:
+                  name: inst_id
+                  type: BIGINT
+              - column:
+                  name: base_salary
+                  type: DECIMAL(19,2)
+              - column:
+                  name: bonus
+                  type: DECIMAL(19,2)
+              - column:
+                  name: fss
+                  type: DECIMAL(19,2)
+              - column:
+                  name: replace
+                  type: DECIMAL(19,2)
+              - column:
+                  name: other_income
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_empl_income
+                  type: DECIMAL(19,2)
+              - column:
+                  name: absent
+                  type: DECIMAL(19,2)
+              - column:
+                  name: union_fee
+                  type: DECIMAL(19,2)
+              - column:
+                  name: income_tax
+                  type: DECIMAL(19,2)
+              - column:
+                  name: advance
+                  type: DECIMAL(19,2)
+              - column:
+                  name: total_empl_deduction
+                  type: DECIMAL(19,2)
+              - column:
+                  name: amount_issued
+                  type: DECIMAL(19,2)
+              - column:
+                  name: month
+                  type: INTEGER
+              - column:
+                  name: year
+                  type: INTEGER
+              - column:
+                  name: payment_data
+                  type: DATE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: add-foreign-keys
+      author: Sabir
+      comment: "Добавление внешних ключей"
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_institution_user_id
+            baseTableName: institution
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: SET NULL
+        - addForeignKeyConstraint:
+            constraintName: fk_employees_inst_id
+            baseTableName: employees
+            baseColumnNames: inst_id
+            referencedTableName: institution
+            referencedColumnNames: id
+            onDelete: SET NULL
+
+        - addForeignKeyConstraint:
+            constraintName: fk_payroll_inst_id
+            baseTableName: payroll
+            baseColumnNames: inst_id
+            referencedTableName: institution
+            referencedColumnNames: id
+            onDelete: SET NULL
+
+        - addForeignKeyConstraint:
+            constraintName: fk_payroll_items_employee
+            baseTableName: payroll_items
+            baseColumnNames: employee_id
+            referencedTableName: employees
+            referencedColumnNames: id
+            onDelete: SET NULL
+
+        - addForeignKeyConstraint:
+            constraintName: fk_payroll_items_payroll
+            baseTableName: payroll_items
+            baseColumnNames: payroll_id
+            referencedTableName: payroll
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            constraintName: fk_payroll_items_institution
+            baseTableName: payroll_items
+            baseColumnNames: inst_id
+            referencedTableName: institution
+            referencedColumnNames: id
+            onDelete: SET NULL
