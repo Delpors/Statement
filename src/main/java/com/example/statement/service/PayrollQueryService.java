@@ -81,6 +81,6 @@ public class PayrollQueryService implements IPayrollQueryService {
 
     public Long getCount(Long instId)
     {
-        return payrollRepository.countAllByInstitution(instId).orElseGet(()->0L);
+        return payrollRepository.countAllByInstitution(instId);
     }
 }

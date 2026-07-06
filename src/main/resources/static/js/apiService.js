@@ -130,14 +130,26 @@ function submitPayroll(event) {
 
     const submitBtn = document.getElementById('submitBtn');
     const originalText = submitBtn.innerHTML;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
     submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Сохранение...';
     submitBtn.disabled = true;
 
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (csrfToken && csrfHeader) {
+        headers[csrfHeader] = csrfToken;
+    } else {
+        console.warn('CSRF токен не найден в мета-тегах. Возможно, страница не обработана Thymeleaf.');
+    }
+
     fetch('/payroll/payrollItems/create', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        credentials: 'include',
+        headers: headers,
         body: JSON.stringify(formData)
     })
         .then(response => {

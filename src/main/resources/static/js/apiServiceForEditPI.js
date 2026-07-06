@@ -67,7 +67,6 @@ function submitPayroll() {
     submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Сохранение...';
     submitBtn.disabled = true;
 
-    // Добавьте CSRF токен, если используется Spring Security
     const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 

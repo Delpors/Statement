@@ -63,7 +63,7 @@
                         <a th:href="@{/payroll/payrollItems/edit/{payrollId}(payrollId=${payroll.payrollId})}" class="btn btn-edit">
                             <i class="bi bi-pen"></i>
                         </a>
-                        <a th:href="@{/payroll/{id}(id=${payroll.payrollId()})}" class="btn btn-danger"
+                        <a th:href="@{/payroll/{payrollId}(payrollId=${payroll.payrollId})}" class="btn btn-danger"
                            onclick="return confirm('Вы уверены, что хотите удалить эту запись?')">
                             <i class="bi bi-trash"></i>
                         </a>

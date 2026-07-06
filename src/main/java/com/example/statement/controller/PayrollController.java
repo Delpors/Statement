@@ -25,7 +25,7 @@ public class PayrollController {
     private final IPayrollQueryService payrollQueryService;
 
     @GetMapping
-    public String showPayroll(Model model, HttpSession session)
+    public String showPayrollList(Model model, HttpSession session)
     {
         Long instId = (Long) session.getAttribute("selectedInstId");
 
@@ -35,9 +35,9 @@ public class PayrollController {
     }
 
     @GetMapping("/{payroll_id}")
-    public String deletePayroll(@PathVariable Long payrollId)
+    public String deletePayroll(@PathVariable Long payroll_id)
     {
-        payrollCommandService.deletePayroll(payrollId);
+        payrollCommandService.deletePayroll(payroll_id);
         return "redirect:/payroll";
     }
     

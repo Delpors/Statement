@@ -20,32 +20,6 @@
             </div>
         </div>
     </div>
-    <div class="quick-actions">
-        <h5 class="mb-3">Быстрые действия</h5>
-        <div class="d-flex flex-wrap">
-            <div class="action-btn">
-                <i class="bi bi-person-plus"></i>
-                <div>Добавить сотрудника</div>
-            </div>
-            <div class="action-btn">
-                <i class="bi bi-file-earmark-text"></i>
-                <div>Новая ведомость</div>
-            </div>
-            <div class="action-btn">
-                <i class="bi bi-graph-up"></i>
-                <div>Создать отчет</div>
-            </div>
-            <div class="action-btn">
-                <i class="bi bi-file-pdf"></i>
-                <div>Экспорт в PDF</div>
-            </div>
-            <div class="action-btn">
-                <i class="bi bi-printer"></i>
-                <div>Печать</div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-md-6 col-lg-3">
             <div class="card employees-card">
@@ -100,9 +74,6 @@
                     </div>
                     <h5 class="card-title">Отчеты</h5>
                     <p class="card-text">Аналитические отчеты, статистика, финансовые и кадровые отчеты</p>
-                    <div class="mb-3">
-                        <span class="stats-badge">За год: 64 отчета</span>
-                    </div>
                     <div class="d-grid gap-2">
                         <a th:href="@{/report}" class="btn btn-card">
                             <i class="bi bi-list-ul me-2"></i> Просмотреть список
@@ -122,9 +93,6 @@
                     </div>
                     <h5 class="card-title">Справки</h5>
                     <p class="card-text">Официальные справки, выписки, подтверждающие документы</p>
-                    <div class="mb-3">
-                        <span class="stats-badge">За месяц: 42 справки</span>
-                    </div>
                     <div class="d-grid gap-2">
                         <button class="btn btn-card"><i class="bi bi-list-ul me-2"></i> Просмотреть список</button>
                         <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-plus-circle me-1"></i> Запросить справку</button>
@@ -139,7 +107,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-clock-history me-2"></i> Недавние действия</h5>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+<!--                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="mb-0">Добавлен новый сотрудник</h6>
                                 <small class="text-muted">Иванов А.С. - Менеджер по продажам</small>
@@ -159,7 +127,7 @@
                                 <small class="text-muted">3 квартал 2023 года</small>
                             </div>
                             <span class="badge bg-primary rounded-pill">2 дня назад</span>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </div>
@@ -178,17 +146,17 @@
                             <small>Ведомостей</small>
                         </div>
                         <div class="col-4">
-                            <h4 class="text-success">64</h4>
-                            <small>Отчетов</small>
+                            <h4 class="text-success">0</h4>
+                            <small>Справок</small>
                         </div>
                     </div>
                     <div class="mt-4">
                         <div class="d-flex justify-content-between mb-1">
                             <span>Заполненность базы данных</span>
-                            <span>78%</span>
+                            <span>0%</span>
                         </div>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 78%"></div>
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
@@ -207,22 +175,14 @@
             <div class="col-md-3">
                 <h5>Контакты</h5>
                 <ul class="list-unstyled">
-                    <li><i class="bi bi-telephone me-2"></i> +7 (495) 123-45-67</li>
-                    <li><i class="bi bi-envelope me-2"></i> info@company.com</li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <h5>Поддержка</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-light">Помощь</a></li>
-                    <li><a href="#" class="text-light">Документация</a></li>
-                    <li><a href="#" class="text-light">Обратная связь</a></li>
+                    <li><i class="bi bi-telephone me-2"></i> +7 (963) 792-88-52</li>
+                    <li><i class="bi bi-envelope me-2"></i> eshigi@mail.ru</li>
                 </ul>
             </div>
         </div>
         <hr>
         <div class="text-center">
-            <p>&copy; 2023 Управление документами. Все права защищены.</p>
+            <p>&copy; 2026 Управление документами. Все права защищены.</p>
         </div>
     </div>
 </footer>
