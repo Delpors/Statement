@@ -4,6 +4,7 @@ import com.example.statement.dto.request.EmployeeRequest;
 import com.example.statement.dto.response.EmployeeResponse;
 import com.example.statement.entity.EmployeeEntity;
 import com.example.statement.service.IEmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +39,7 @@ public class EmployeeController {
 
     @PostMapping("/employees/create")
     public String createEmployee(
-            @ModelAttribute EmployeeRequest request,
+            @ModelAttribute @Valid EmployeeRequest request,
             @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
         if (instId == null) {
@@ -61,7 +62,7 @@ public class EmployeeController {
     @PostMapping("/employees/update/{id}")
     public String updateEmployee(
             @PathVariable("id") Long id,
-            @ModelAttribute EmployeeRequest request,
+            @ModelAttribute @Valid EmployeeRequest request,
             @SessionAttribute (value = "selectedInstId", required = false) Long instId)
     {
         if (instId == null) {

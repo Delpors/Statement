@@ -1,4 +1,4 @@
-package com.example.statement.sequryti;
+package com.example.statement.security;
 
 import com.example.statement.entity.UserEntity;
 import com.example.statement.repository.UserRepository;

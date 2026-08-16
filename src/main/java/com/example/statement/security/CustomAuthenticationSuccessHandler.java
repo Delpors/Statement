@@ -1,4 +1,4 @@
-package com.example.statement.sequryti;
+package com.example.statement.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

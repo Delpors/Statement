@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface PayrollItemsRepository extends JpaRepository<PayrollItemsEntity, Long> {
 
     @Query("SELECT pi FROM PayrollItemsEntity pi " +
+            "JOIN FETCH pi.employee e " +
+            "JOIN FETCH pi.institution i " +
     "WHERE pi.payroll.id = :payrollId " +
     "AND pi.institution.id = :selectedInst " +
     "ORDER BY pi.employee.name ASC")
